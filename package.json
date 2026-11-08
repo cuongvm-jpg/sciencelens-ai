@@ -1,8 +1,8 @@
 {
-  "name": "sciencelens-ai-stateless",
-  "version": "1.0.0",
+  "name": "sciencelens-lab-v2",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "Web app KHTN không lưu dữ liệu, deploy trực tiếp trên Vercel",
-  "engines": { "node": ">=20" }
+  "description": "ScienceLens AI: robot khoa hoc tranh luan, Vercel stateless, no database",
+  "engines": {"node": ">=20"}
 }

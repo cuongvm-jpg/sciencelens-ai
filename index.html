@@ -1,206 +1,136 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#f5f7fa" />
+  <meta name="theme-color" content="#f8f7fc" />
   <meta name="robots" content="noindex, nofollow" />
-  <title>ScienceLens AI · Khoa học từ cuộc sống</title>
-  <style>
-    :root{--ink:#182637;--muted:#5d7080;--line:#dbe4e8;--blue:#1764d6;--light:#f5f7fa;--card:#fff;--green:#0d7b70;--orange:#f0a749}
-    *{box-sizing:border-box}body{margin:0;background:var(--light);color:var(--ink);font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.5}
-    .shell{max-width:610px;margin:auto;padding:24px 16px 90px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:28px}
-    .logo{display:flex;align-items:center;gap:10px}.mark{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:#e5edff;font-size:23px}
-    .brand{font-weight:850;letter-spacing:-.5px;font-size:18px}.tag{font-size:11px;color:var(--muted)}.privacy{font-size:11px;color:#07685e;background:#e0f4ee;padding:7px 10px;border-radius:100px;font-weight:700;white-space:nowrap}
-    h1{font-size:clamp(26px,5.5vw,35px);letter-spacing:-1.2px;line-height:1.13;margin:0 0 12px}h2{font-size:17px;margin:0 0 10px;letter-spacing:-.2px}
-    p{margin:0 0 15px;color:var(--muted)}.hero{margin-bottom:22px}.eyebrow{font-size:11px;color:var(--blue);text-transform:uppercase;letter-spacing:1.4px;font-weight:800;margin-bottom:12px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:19px;margin:14px 0;box-shadow:0 9px 32px rgba(14,40,70,.035)}
-    .mode{display:flex;background:#edf1f5;padding:4px;border-radius:13px;gap:4px}.mode button{flex:1;background:transparent;color:var(--muted);border:none;border-radius:10px;padding:12px 8px;font-weight:750;cursor:pointer}
-    .mode button.active{background:white;color:#0a386e;box-shadow:0 1px 6px #132a4620}.field{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0}
-    select,textarea{font:inherit}select{border:1px solid var(--line);background:#fff;padding:9px;border-radius:10px;color:var(--ink)}
-    .camera{border:2px dashed #b8c8d4;min-height:205px;border-radius:17px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:9px;background:#f8fbfe;text-align:center;padding:15px;position:relative;overflow:hidden}
-    .camera strong{font-size:16px}.camera small{color:var(--muted)}.camera img{width:100%;max-height:320px;object-fit:contain;border-radius:11px}
-    .button{display:inline-flex;justify-content:center;align-items:center;gap:8px;width:100%;padding:13px 16px;border-radius:12px;border:1px solid transparent;background:var(--blue);color:white;font-weight:750;font-size:15px;cursor:pointer;margin-top:12px}
-    .button.secondary{background:white;color:var(--ink);border-color:#cad6df}.button.subtle{background:#f2f5f7;color:var(--ink)}.button:disabled{opacity:.5;cursor:not-allowed}.button.small{width:auto;padding:10px 15px;margin:0}
-    .note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:10px}.warn{background:#fff7e8;color:#7b510e;padding:12px;border-radius:12px;font-size:12px;margin-top:11px}
-    .samples{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.sample{background:#f6f8fa;border:1px solid #dfe7ec;border-radius:12px;padding:11px 6px;text-align:center;font-size:12px;font-weight:700;color:#314153;cursor:pointer}
-    .sample span{font-size:24px;display:block;margin-bottom:5px}.step{display:inline-flex;align-items:center;gap:6px;background:#eaf1ff;color:#1b5ea9;font-size:12px;padding:6px 10px;border-radius:20px;margin-bottom:12px;font-weight:750}
-    .topic{color:#14766b;font-size:13px;font-weight:750;margin:5px 0 9px}.question{font-weight:790;color:var(--ink);font-size:19px;letter-spacing:-.2px;line-height:1.4;margin:8px 0 14px}
-    .subbox{border-left:3px solid #83b3f6;background:#f3f7ff;padding:12px 14px;margin:10px 0;border-radius:4px 10px 10px 4px}
-    .subbox strong{font-size:12px;color:#225ca1}.subbox div{margin-top:3px}.answer{width:100%;min-height:118px;resize:vertical;padding:13px;background:#fbfcfd;border:1px solid #c9d8e2;border-radius:13px;outline-color:var(--blue)}
-    .result{padding:14px;background:#edf8f5;border-radius:13px;margin:10px 0}.result b{color:#0a6d63}.result p{margin:4px 0 11px;color:#2d454c}.result p:last-child{margin-bottom:0}
-    .error{background:#fff1f0;color:#923329;border:1px solid #f4d0ce;padding:12px;border-radius:13px;font-size:13px;margin-top:12px}
-    .hidden{display:none!important}.bottom{color:#667885;font-size:12px;text-align:center;margin-top:22px}.inline-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    .bar{display:flex;gap:6px;margin-bottom:19px}.bar span{height:5px;background:#dfe8ef;border-radius:10px;flex:1}.bar span.on{background:#3d7bdf}
-    .spinner{width:15px;height:15px;border-radius:50%;border:2px solid #ffffff80;border-top-color:#fff;animation:spin .6s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-    @media (prefers-reduced-motion:reduce){.spinner{animation:none}}@media(max-width:375px){.shell{padding:18px 12px 80px}.card{padding:15px}.privacy{font-size:10px}}
-  </style>
+  <meta name="description" content="ScienceLens AI — Chụp thế giới thật, bắt lỗi robot khoa học, học bằng phản biện." />
+  <title>ScienceLens AI · Bắt lỗi Mây</title>
+  <link rel="stylesheet" href="/assets/styles.css" />
+  <script type="module" src="/assets/app.js"></script>
 </head>
 <body>
-<main class="shell">
-  <header class="top"><div class="logo"><div class="mark">🔬</div><div><div class="brand">ScienceLens <span style="color:#2a72d8">AI</span></div><div class="tag">Khoa học quanh em</div></div></div><div class="privacy">◉ Không lưu lịch sử</div></header>
-  <section class="hero"><div class="eyebrow">Khám phá khoa học bằng camera</div><h1>Một bức ảnh.<br/>Một câu hỏi thú vị.</h1><p>Chụp vật thể, tự dự đoán và khám phá hiện tượng khoa học cùng AI.</p></section>
-  <div class="bar" aria-hidden="true"><span id="bar1" class="on"></span><span id="bar2"></span><span id="bar3"></span></div>
-  <section class="card" id="startPanel">
-    <h2>01 · Bắt đầu khám phá</h2>
-    <div class="mode" role="group" aria-label="Chế độ sử dụng">
-      <button id="modeDemo" class="active" type="button">🧪 Demo mẫu</button>
-      <button id="modeReal" type="button">✨ AI phân tích ảnh</button>
+<div class="app-shell">
+  <header class="topbar">
+    <a class="brand" href="/" id="brandLink" aria-label="ScienceLens AI, về trang chủ">
+      <span class="brand-logo" aria-hidden="true">✳</span>
+      <span>science<span class="brand-heavy">lens</span><small>AI</small></span>
+    </a>
+    <div class="top-actions">
+      <span class="session-tag"><span class="session-dot"></span>Phiên tạm</span>
+      <button id="resetTop" type="button" class="icon-button" aria-label="Xóa phiên và làm lại" title="Xóa phiên và làm lại">↻</button>
     </div>
-    <div class="field"><label for="grade">Chọn khối lớp</label><select id="grade"><option value="6">KHTN 6</option><option value="7">KHTN 7</option><option value="8" selected>KHTN 8</option><option value="9">KHTN 9</option></select></div>
-    <div id="realPanel" class="hidden">
-      <div class="camera" id="cameraFrame">
-        <div id="emptyPhoto"><div style="font-size:35px">📸</div><strong>Chụp một hiện tượng khoa học</strong><small>Ví dụ: cốc nước, nam châm, bóng đèn...</small></div>
-        <img id="photoPreview" alt="Ảnh vật thể vừa chọn" class="hidden" />
-        <video id="liveVideo" class="hidden" autoplay playsinline muted aria-label="Hình ảnh camera trực tiếp"></video>
+  </header>
+
+  <main>
+    <section id="homeScreen" class="home-screen">
+      <div class="intro-grid">
+        <div class="intro-copy">
+          <div class="eyebrow"><span class="eyebrow-dot">✦</span> THÍ NGHIỆM TƯ DUY</div>
+          <h1>Ồ! AI nói <span>SAI</span><br />rồi kìa.</h1>
+          <p>Chụp một hiện tượng khoa học, tìm lỗi trong lời robot và dùng bằng chứng để thuyết phục bạn ấy!</p>
+          <div class="hero-chips" aria-label="Điểm độc đáo"><span>📸 Vật thật</span><span>🧩 Tư duy phản biện</span><span>💬 Đối thoại liên tục</span></div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <span class="float-shape shape-a">✦</span><span class="float-shape shape-b">?</span><span class="float-shape shape-c">✳</span>
+          <div class="robot-illustration"><div class="robot-antenna"></div><div class="robot-head"><i class="robot-eye"></i><i class="robot-eye"></i><div class="robot-mouth"></div></div><div class="robot-body"><span>⚡</span></div></div>
+          <div class="robot-caption">Tớ chắc là đúng... <strong>nhỉ?</strong></div>
+        </div>
       </div>
-      <input type="file" id="filePicker" accept="image/*" class="hidden" />
-      <button class="button secondary" id="openCamera" type="button">📷 Mở camera trực tiếp (không lưu ảnh)</button>
-      <button class="button hidden" id="takeSnapshot" type="button">📸 Chụp khung hình</button>
-      <button class="button secondary hidden" id="closeCamera" type="button">Đóng camera</button>
-      <button class="button subtle" id="pickPhoto" type="button">🖼️ Chọn ảnh có sẵn (dự phòng)</button>
-      <div class="warn">Chỉ chụp đồ vật. Không chụp khuôn mặt, tên, giấy tờ hay thông tin cá nhân.</div>
-      <button class="button" id="analyzeBtn" type="button" disabled>✨ AI tạo thử thách</button>
-    </div>
-    <div id="demoPanel"><p style="font-size:13px;margin-top:14px;margin-bottom:8px">Chọn một tình huống đã soạn sẵn để thử giao diện (không phân tích ảnh):</p>
-      <div class="samples"><button class="sample" type="button" data-sample="water"><span>🥛</span>Bút trong nước</button><button class="sample" type="button" data-sample="magnet"><span>🧲</span>Nam châm</button><button class="sample" type="button" data-sample="shadow"><span>🔦</span>Bóng của vật</button></div>
-      <div class="note">Chế độ demo hoạt động không cần API. Nội dung và phản hồi đều là mẫu, không phải kết quả Gemini.</div>
-    </div>
-  </section>
-  <section class="card hidden" id="challengePanel">
-    <div class="step" id="challengeStep">02 · Câu hỏi khám phá</div>
-    <h2 id="objectTitle"></h2><div id="phenomenon" class="topic"></div><div id="question" class="question"></div>
-    <div class="subbox"><strong>🔎 Dự đoán</strong><div id="prediction"></div></div>
-    <div class="subbox"><strong>🧪 Gợi ý kiểm chứng an toàn</strong><div id="verification"></div></div>
-    <details><summary style="color:#255eaf;cursor:pointer;font-weight:700;font-size:13px">💡 Xem gợi ý nếu cần</summary><p id="hint" style="margin:8px 0 0"></p></details>
-    <div id="safety" class="note"></div>
-    <label for="studentAnswer" style="font-weight:750;display:block;margin:17px 0 9px">Em giải thích hiện tượng thế nào?</label>
-    <textarea id="studentAnswer" class="answer" maxlength="1200" placeholder="Em dự đoán... vì... Bằng chứng của em là..."></textarea>
-    <button class="button" id="feedbackBtn" type="button">💬 Nhận phản hồi</button>
-  </section>
-  <section class="card hidden" id="feedbackPanel">
-    <div class="step">03 · Cùng suy nghĩ tiếp</div><h2 id="feedbackTitle">Phản hồi về câu trả lời</h2>
-    <div class="result"><b>✅ Điểm hợp lý</b><p id="good"></p><b>🧠 Điều cần suy nghĩ thêm</b><p id="improve"></p><b>📚 Giải thích khoa học</b><p id="explanation"></p><b>❓ Câu hỏi mở rộng</b><p id="nextQuestion"></p></div>
-    <button class="button" id="newSession" type="button">🔄 Khám phá điều mới</button>
-  </section>
-  <div id="statusMsg" class="hidden" role="status" aria-live="polite"></div>
-  <button class="button subtle" id="endBtn" type="button">🗑️ Kết thúc & xóa phiên</button>
-  <footer class="bottom">Dữ liệu phiên học chỉ giữ tạm trong trình duyệt, không lưu vào cơ sở dữ liệu.<br/>Khi chọn AI thật, ảnh và nội dung cần thiết được gửi đến dịch vụ Gemini qua Vercel.</footer>
-</main>
-<script>
-(() => {
-  'use strict';
-  const $ = id => document.getElementById(id);
-  const samples = {
-    water: {object:'Bút chì trong cốc nước',phenomenon:'Khúc xạ ánh sáng',question:'Vì sao bút chì trông như bị gãy ở mặt nước? Khi lấy bút ra, em dự đoán điều gì xảy ra?',prediction:'Dự đoán trước khi rút bút ra khỏi cốc.',verification:'Từ từ rút bút khỏi cốc nước và quan sát. Không dùng cốc thủy tinh dễ vỡ với trẻ nhỏ.',hint:'Tia sáng đi từ nước sang không khí có thay đổi hướng không?',safetyNote:'Dùng cốc nhựa trong để an toàn.',usable:true,
-      feedback:{good:'Em đã thử tự dự đoán hiện tượng, đó là bước đầu trong tư duy khoa học.',improve:'Hãy giải thích vì sao ánh sáng đi từ nước sang không khí có thể đổi hướng.',explanation:'Ánh sáng bị khúc xạ khi truyền xiên góc qua mặt phân cách giữa nước và không khí. Mắt nhận thấy phần bút chì ngập nước bị lệch vị trí biểu kiến.',nextQuestion:'Nếu thay nước bằng một chất lỏng trong suốt khác thì hình ảnh chiếc bút có thể thay đổi không?'}},
-    magnet: {object:'Nam châm và kẹp giấy',phenomenon:'Tương tác từ',question:'Nam châm có hút mọi loại kim loại không? Làm sao em chứng minh?',prediction:'Chọn vài đồ vật kim loại khác nhau và dự đoán đồ vật nào bị hút.',verification:'Dùng nam châm nhỏ thử với kẹp giấy bằng thép, thìa inox hoặc đồng xu. Không đưa nam châm gần thiết bị điện tử nhạy cảm.',hint:'Sắt, niken và một số hợp kim có phản ứng từ khác đồng, nhôm.',safetyNote:'Không thử với vật sắc nhọn.',usable:true,
-      feedback:{good:'Em đã đặt giả thuyết có thể kiểm chứng bằng vật thật.',improve:'Nên phân biệt kim loại với vật liệu có tính sắt từ.',explanation:'Nam châm hút mạnh các vật liệu sắt từ như sắt và nhiều loại thép; không phải mọi kim loại đều bị hút rõ rệt.',nextQuestion:'Vì sao một số thìa inox bị hút còn một số khác không?'}},
-    shadow: {object:'Đèn pin và bóng của vật',phenomenon:'Sự truyền thẳng của ánh sáng',question:'Khi đưa đèn pin lại gần vật chắn sáng, kích thước bóng trên tường thay đổi thế nào?',prediction:'Dự đoán bóng sẽ lớn hơn, nhỏ hơn hay giữ nguyên.',verification:'Đặt vật giữa đèn pin và tường, thay đổi khoảng cách đèn–vật và quan sát. Chỉ sử dụng đèn pin thường.',hint:'Hãy tưởng tượng các tia sáng tỏa từ nguồn sáng về phía tường.',safetyNote:'Không chiếu đèn mạnh vào mắt.',usable:true,
-      feedback:{good:'Việc thay đổi một điều kiện rồi quan sát giúp kiểm tra dự đoán.',improve:'Hãy giữ nguyên vị trí vật và tường khi thay đổi khoảng cách đèn.',explanation:'Với một nguồn sáng gần đúng là điểm, khi đèn tiến gần vật chắn sáng và vật giữ nguyên trước tường, bóng thường lớn hơn do góc tạo bởi các tia sáng mở rộng.',nextQuestion:'Nếu giữ đèn cố định nhưng đưa vật sát tường, bóng thay đổi thế nào?'}}
-  };
-  let mode='demo', picture='', challenge=null, challengeSource='demo', busy=false, currentCall=null, callVersion=0, expiryTimer=null, lastTouch=Date.now(), cameraStream=null;
-  const MAX_IDLE=15*60*1000;
-  function show(id,visible){$(id).classList.toggle('hidden',!visible)}
-  function setText(id,text){$(id).textContent=String(text??'')}
-  function notice(message, isError=false){const el=$('statusMsg');el.textContent=message;el.className=message?(isError?'error':'note'):'hidden'}
-  function stateBar(step){for(let i=1;i<=3;i++)$('bar'+i).classList.toggle('on',i<=step)}
-  function touch(){lastTouch=Date.now();clearTimeout(expiryTimer);expiryTimer=setTimeout(()=>reset(true,'Phiên đã tự xóa sau 15 phút không thao tác.'),MAX_IDLE)}
-  function clearCalls(){callVersion++;if(currentCall){currentCall.abort();currentCall=null}busy=false}
-  function stopCamera(){
-    if(cameraStream){for(const track of cameraStream.getTracks())track.stop();cameraStream=null;}
-    const video=$('liveVideo');video.pause();video.srcObject=null;show('liveVideo',false);
-    show('openCamera',true);show('takeSnapshot',false);show('closeCamera',false);
-  }
-  function acceptPicture(data){
-    picture=data;$('photoPreview').src=data;show('photoPreview',true);show('emptyPhoto',false);
-    $('analyzeBtn').disabled=false;notice('Đã chụp ảnh vào RAM. Ảnh chưa được gửi lên mạng.');
-  }
-  function reset(announce=true,message='Toàn bộ nội dung phiên học đã được xóa khỏi ứng dụng.'){
-    clearCalls();stopCamera();picture='';challenge=null;challengeSource='demo';$('filePicker').value='';$('photoPreview').removeAttribute('src');
-    show('photoPreview',false);show('emptyPhoto',true);$('studentAnswer').value='';
-    for(const id of ['objectTitle','phenomenon','question','prediction','verification','hint','safety','good','improve','explanation','nextQuestion'])setText(id,'');
-    show('challengePanel',false);show('feedbackPanel',false);show('startPanel',true);$('analyzeBtn').disabled=true;stateBar(1);
-    $('analyzeBtn').textContent='✨ AI tạo thử thách';$('feedbackBtn').textContent='💬 Nhận phản hồi';
-    if(announce)notice(message);else notice('');
-  }
-  function switchMode(next){if(next===mode)return;reset(false);mode=next;show('realPanel',next==='real');show('demoPanel',next==='demo');$('modeReal').classList.toggle('active',next==='real');$('modeDemo').classList.toggle('active',next==='demo');touch(); if(next==='real' && !window.aiReady)notice('Chưa cấu hình GEMINI_API_KEY trên Vercel. Chế độ AI thật chưa khả dụng.',true)}
-  async function imageToJpegBase64(file){
-    if(!file || !file.type.startsWith('image/'))throw Error('Vui lòng chọn ảnh hợp lệ.');
-    const url=URL.createObjectURL(file);let img=new Image();
-    try {img.src=url;await img.decode();const scale=Math.min(1,1200/Math.max(img.naturalWidth,img.naturalHeight));
-      const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
-      const ctx=canvas.getContext('2d');if(!ctx)throw Error('Trình duyệt không thể xử lý ảnh.');
-      ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);
-      const data=canvas.toDataURL('image/jpeg',.76);canvas.width=1;canvas.height=1;
-      if(data.length>2_000_000)throw Error('Ảnh vẫn quá lớn, hãy chụp ở độ phân giải thấp hơn.');
-      return data;
-    } finally {URL.revokeObjectURL(url);img.removeAttribute('src');img=null}
-  }
-  async function api(body){
-    const ctrl=new AbortController();currentCall=ctrl;const myVersion=++callVersion;
-    try {const res=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json','Cache-Control':'no-store'},body:JSON.stringify(body),signal:ctrl.signal,cache:'no-store',credentials:'omit'});
-      const data=await res.json();if(myVersion!==callVersion)throw new DOMException('Đã hủy','AbortError');
-      if(!res.ok)throw Error(data.error||'Không thể kết nối AI.');return data.result;
-    } finally {if(currentCall===ctrl)currentCall=null}
-  }
-  function displayChallenge(data,source){challenge=data;challengeSource=source;show('startPanel',false);show('challengePanel',true);show('feedbackPanel',false);stateBar(2);
-    setText('challengeStep',source==='demo'?'02 · Thử thách mẫu (không phải AI)':'02 · Thử thách AI tạo từ ảnh');
-    setText('objectTitle',data.object);setText('phenomenon',data.phenomenon);setText('question',data.question);
-    setText('prediction',data.prediction);setText('verification',data.verification);setText('hint',data.hint);setText('safety',data.safetyNote);
-    notice('');touch();
-  }
-  function displayFeedback(data,source){show('feedbackPanel',true);stateBar(3);setText('feedbackTitle',source==='demo'?'Phản hồi mẫu (không phải AI)':'AI phản hồi lời giải của em');
-    for(const k of ['good','improve','explanation','nextQuestion'])setText(k,data[k]);
-    $('feedbackPanel').scrollIntoView({behavior:'smooth',block:'start'});touch();
-  }
-  function setBusy(value,which){busy=value;const button=$(which);button.disabled=value||(which==='analyzeBtn'&&!picture);button.innerHTML=value?'<span class="spinner"></span> Đang phân tích...':(which==='analyzeBtn'?'✨ AI tạo thử thách':'💬 Nhận phản hồi');$('endBtn').disabled=false}
-  $('modeDemo').addEventListener('click',()=>switchMode('demo'));$('modeReal').addEventListener('click',()=>switchMode('real'));
-  $('openCamera').addEventListener('click',async()=>{
-    touch();if(!navigator.mediaDevices?.getUserMedia){notice('Trình duyệt không hỗ trợ camera trực tiếp. Hãy dùng ảnh dự phòng.',true);return;}
-    if(!window.isSecureContext){notice('Camera trực tiếp cần HTTPS. Hãy mở trang trên URL Vercel.',true);return;}
-    try{
-      stopCamera();const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});
-      cameraStream=stream;const video=$('liveVideo');video.srcObject=stream;await video.play();
-      show('photoPreview',false);show('emptyPhoto',false);show('liveVideo',true);
-      show('openCamera',false);show('takeSnapshot',true);show('closeCamera',true);
-      notice('Camera đang xem trực tiếp; chưa ghi ảnh vào bộ nhớ hoặc gửi lên mạng.');
-    }catch(err){stopCamera();show('emptyPhoto',!picture);notice('Không mở được camera. Hãy cấp quyền camera hoặc chọn ảnh có sẵn.',true)}
-  });
-  $('closeCamera').addEventListener('click',()=>{stopCamera();show('emptyPhoto',!picture);show('photoPreview',!!picture);touch()});
-  $('takeSnapshot').addEventListener('click',()=>{
-    touch();const video=$('liveVideo');if(!cameraStream||!video.videoWidth){notice('Camera chưa sẵn sàng.',true);return}
-    const scale=Math.min(1,1200/Math.max(video.videoWidth,video.videoHeight));const canvas=document.createElement('canvas');
-    canvas.width=Math.max(1,Math.round(video.videoWidth*scale));canvas.height=Math.max(1,Math.round(video.videoHeight*scale));
-    const ctx=canvas.getContext('2d');ctx.drawImage(video,0,0,canvas.width,canvas.height);
-    const data=canvas.toDataURL('image/jpeg',.76);canvas.width=1;canvas.height=1;stopCamera();
-    if(data.length>2000000){notice('Ảnh quá lớn, hãy thử lại.',true);return}acceptPicture(data);
-  });
-  $('pickPhoto').addEventListener('click',()=>$('filePicker').click());
-  $('filePicker').addEventListener('change',async e=>{touch();if(!e.target.files?.[0])return;
-    try {stopCamera();acceptPicture(await imageToJpegBase64(e.target.files[0]));notice('Ảnh được giữ tạm trong RAM trình duyệt. Lưu ý: nếu chọn ảnh qua ứng dụng camera hệ điều hành, ảnh gốc có thể đã nằm trong thư viện ảnh của điện thoại.');}
-    catch(err){picture='';$('analyzeBtn').disabled=true;notice(err.message,true)}
-  });
-  $('analyzeBtn').addEventListener('click',async()=>{touch();if(busy||!picture)return;setBusy(true,'analyzeBtn');notice('Đang gửi ảnh để AI tạo thử thách...');
-    try {const result=await api({mode:'challenge',grade:Number($('grade').value),image:picture.split(',')[1]});if(result.usable!==true){notice(result.safetyNote||'Ảnh chưa phù hợp. Vui lòng chụp lại.',true);return}displayChallenge(result,'ai')}
-    catch(err){if(err.name!=='AbortError')notice(err.message||'Lỗi phân tích.',true)}
-    finally {setBusy(false,'analyzeBtn')}
-  });
-  for(const btn of document.querySelectorAll('[data-sample]'))btn.addEventListener('click',()=>displayChallenge(samples[btn.dataset.sample],'demo'));
-  $('feedbackBtn').addEventListener('click',async()=>{touch();if(!challenge||busy)return;const answer=$('studentAnswer').value.trim();if(!answer){notice('Em hãy viết dự đoán hoặc lời giải trước khi nhận phản hồi.',true);return}
-    if(challengeSource==='demo'){displayFeedback(challenge.feedback,'demo');return}
-    setBusy(true,'feedbackBtn');notice('AI đang phản hồi phần giải thích...');
-    try {const result=await api({mode:'feedback',grade:Number($('grade').value),challenge,answer});displayFeedback(result,'ai');notice('')}
-    catch(err){if(err.name!=='AbortError')notice(err.message||'Lỗi phản hồi.',true)}
-    finally {setBusy(false,'feedbackBtn')}
-  });
-  $('endBtn').addEventListener('click',()=>{reset();touch();window.scrollTo({top:0,behavior:'smooth'})});
-  $('newSession').addEventListener('click',()=>{reset(false);touch();window.scrollTo({top:0,behavior:'smooth'})});
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden && Date.now()-lastTouch>MAX_IDLE){reset(true,'Phiên đã được xóa vì không hoạt động quá 15 phút.');touch()}});
-  window.addEventListener('pagehide',()=>{reset(false);clearTimeout(expiryTimer)});
-  window.addEventListener('pageshow',e=>{if(e.persisted){reset(false);touch()}});
-  window.aiReady=false;fetch('/api/analyze',{cache:'no-store'}).then(r=>r.json()).then(v=>{window.aiReady=!!v.configured}).catch(()=>{});touch();
-})();
-</script>
+
+      <div class="play-setup">
+        <div class="section-heading"><span class="num">01</span><div><h2>Chọn lớp của em</h2><p>Câu hỏi đúng độ khó, đúng kiến thức nền</p></div></div>
+        <div class="grade-options" id="gradeOptions" role="group" aria-label="Chọn khối lớp">
+          <button class="grade-btn" type="button" data-grade="6">Lớp 6</button>
+          <button class="grade-btn" type="button" data-grade="7">Lớp 7</button>
+          <button class="grade-btn selected" type="button" data-grade="8" aria-pressed="true">Lớp 8</button>
+          <button class="grade-btn" type="button" data-grade="9">Lớp 9</button>
+        </div>
+
+        <div class="section-heading with-margin"><span class="num">02</span><div><h2>Chọn cách khám phá</h2><p>Có thể chơi thử trước khi mở camera</p></div></div>
+        <div class="tabs" role="tablist" aria-label="Chế độ khám phá">
+          <button id="tabDemo" class="tab active" type="button" role="tab" aria-selected="true">🧪 Chơi thử</button>
+          <button id="tabCamera" class="tab" type="button" role="tab" aria-selected="false">📷 Camera AI</button>
+        </div>
+
+        <section id="demoPanel" class="demo-panel">
+          <div class="demo-grid" id="demoGrid" aria-label="Chọn một tình huống"></div>
+          <div class="demo-disclaimer">Chế độ mẫu • Hội thoại mô phỏng, không gọi AI</div>
+        </section>
+
+        <section id="cameraPanel" class="camera-panel hidden">
+          <div class="topic-row"><span>Chủ đề</span><select id="topicSelect" aria-label="Chọn chủ đề Khoa học tự nhiên"></select></div>
+          <div id="cameraViewport" class="camera-viewport">
+            <video id="cameraVideo" autoplay playsinline muted aria-label="Camera trực tiếp" class="hidden"></video>
+            <img id="photoPreview" alt="Ảnh thí nghiệm đã chụp" class="hidden" />
+            <div id="cameraPlaceholder" class="camera-placeholder">
+              <span class="camera-symbol" aria-hidden="true">📷</span>
+              <strong>Biến đồ vật thành câu đố</strong>
+              <span>Camera chỉ bật khi em cho phép</span>
+            </div>
+            <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+            <span id="cameraLive" class="live-chip hidden"><span></span>LIVE</span>
+          </div>
+          <div class="camera-buttons">
+            <button class="btn btn-soft" id="openCamera" type="button">📷 Mở camera</button>
+            <button class="btn btn-primary hidden" id="snapPhoto" type="button">✦ Chụp ảnh</button>
+            <button class="btn btn-soft hidden" id="retakePhoto" type="button">↻ Chụp lại</button>
+            <button class="btn btn-ghost" id="choosePhoto" type="button">Chọn ảnh</button>
+            <input type="file" id="photoFile" accept="image/*" hidden />
+          </div>
+          <button class="btn btn-primary full-width" id="createMission" type="button" disabled>✨ Tạo thử thách từ ảnh <span aria-hidden="true">→</span></button>
+          <div class="privacy-inline">🔒 Chỉ chụp vật thể, không chụp người hoặc giấy tờ.</div>
+        </section>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="game-screen hidden">
+      <div class="game-topline">
+        <button class="back-button" id="backHome" type="button" aria-label="Khám phá hiện tượng mới">← <span>Khám phá khác</span></button>
+        <span class="round-label" id="roundLabel">KHTN 8</span>
+      </div>
+      <div class="game-grid">
+        <aside class="mission-side">
+          <div class="mission-card">
+            <div class="mission-eyebrow">MỆNH ĐỀ ĐÁNG NGỜ <span>✴</span></div>
+            <div class="mission-avatar" id="missionAvatar" aria-hidden="true">💧</div><img class="mission-photo hidden" id="missionPicture" alt="Vật thể đang khám phá" />
+            <div class="mission-topic" id="missionTopic"></div>
+            <h2 id="missionScene"></h2>
+            <div class="mission-separator"></div>
+            <div class="mission-steps"><span class="step-current" id="stepOne">1</span><i></i><span id="stepTwo">2</span><i></i><span id="stepThree">3</span></div>
+            <p class="mission-goal" id="missionGoal">Nghe Mây → Phản biện → Tìm bằng chứng</p>
+            <button class="test-toggle" id="toggleExperiment" type="button" aria-expanded="false">🧪 Thử nghiệm nhỏ <span>⌄</span></button>
+            <div class="test-body hidden" id="experimentText"></div>
+          </div>
+        </aside>
+
+        <section class="dialogue-card" aria-label="Hội thoại phản biện khoa học">
+          <div class="chat-head">
+            <div class="bot-avatar mini" aria-hidden="true"><span>••</span></div>
+            <div><strong>Mây — robot hay nhầm</strong><span id="chatStatus">Đang chờ em bắt lỗi...</span></div>
+            <span class="chat-energy">✦ <span id="sparkCount">0</span></span>
+          </div>
+          <div id="conversation" class="conversation" role="log" aria-live="polite" aria-relevant="additions"></div>
+          <div id="winBanner" class="win-banner hidden"><div>🎉 <strong>Đã bắt được lỗi!</strong></div><span>Em đã giúp Mây sửa lại kiến thức. Tiếp tục trò chuyện hoặc khám phá vật khác nhé.</span></div>
+          <div class="chat-tools" id="chatTools">
+            <button class="tool-chip" id="suggestDisagree" type="button">🤨 Tớ không đồng ý</button>
+            <button class="tool-chip" id="suggestEvidence" type="button">🔎 Vì sao nhỉ?</button>
+            <button class="tool-chip" id="askHint" type="button">💡 Gợi ý</button>
+          </div>
+          <div class="composer-wrap">
+            <label class="sr-only" for="messageInput">Câu trả lời của em</label>
+            <textarea id="messageInput" rows="2" maxlength="950" placeholder="Em nghĩ Mây sai vì..." enterkeyhint="send"></textarea>
+            <button class="send-btn" id="sendMessage" type="button" aria-label="Gửi phản biện" disabled>➤</button>
+          </div>
+          <div id="chatNotice" class="chat-notice hidden" role="alert"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+  <footer class="app-footer"><span>Khoa học là đặt câu hỏi.</span><span>Không lưu lịch sử học tập</span></footer>
+</div>
 </body>
 </html>
