@@ -1,0 +1,8 @@
+{
+  "name": "sciencelens-ai-stateless",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Web app KHTN không lưu dữ liệu, deploy trực tiếp trên Vercel",
+  "engines": { "node": ">=20" }
+}
