@@ -1,6 +1,14 @@
-# ScienceLens AI v3.0 — Ảnh nào cũng có khoa học
+# ScienceLens AI v3.1 — Camera gọn, UI giáo dục rõ ràng
 
 Ứng dụng độc lập chạy trên **Vercel**, không dùng ToanX, không tài khoản, không cơ sở dữ liệu.
+
+## Cập nhật UI/UX v3.1
+
+- Camera **16:9** theo vùng xem, rộng tối đa **640px trên desktop**, co theo màn hình điện thoại (không đặt chiều cao cố định), tránh khung quá dài hoặc quá rộng.
+- Chụp trực tiếp được cắt đúng 16:9 như ảnh nhìn thấy; ảnh từ thư viện được **giữ nguyên toàn bộ nội dung**, thu nhỏ và có viền trống khi cần, tránh làm mất chi tiết hiện tượng.
+- Nút **Tạo thử thách từ ảnh** đặt giữa, chiều rộng tối đa 490px trên desktop, đầy chiều rộng trên điện thoại, kiểu màu tím giáo dục, chữ căn giữa, trạng thái bị khóa vẫn dễ đọc.
+- Cải thiện độ tương phản, kích thước chữ tiếng Việt, khoảng cách và mục tiêu chạm >= 48px cho các thao tác quan trọng. Không tải font bên thứ ba.
+- Giữ nguyên cơ chế AI nhận ảnh tự do, phản biện liên tục, dữ liệu phiên tạm và Gemini API key cũ.
 
 ## Thay đổi so với bản v2
 
@@ -18,12 +26,12 @@
    - `GEMINI_API_KEY`: API key lấy từ Google AI Studio.
    - `GEMINI_MODEL`: tên mô hình Gemini có hỗ trợ ảnh và xuất JSON (giữ tên mô hình đã hoạt động ở dự án cũ).
 3. Commit / Push mã nguồn lên nhánh Production của repository đang liên kết Vercel. Deploy tự động nếu Git integration được kết nối đúng.
-4. Mở `https://<ten-du-an>.vercel.app/api/analyze`. API trả về `version: "3.0.0"`, `configured: true` khi đã có khóa. Đây chỉ là kiểm tra cấu hình khóa, không phải kiểm tra quota hoặc khả năng gọi mô hình.
+4. Mở `https://<ten-du-an>.vercel.app/api/analyze`. API trả về `version: "3.1.0"`, `configured: true` khi đã có khóa. Đây chỉ là kiểm tra cấu hình khóa, không phải kiểm tra quota hoặc khả năng gọi mô hình.
 5. Trên điện thoại (HTTPS): mở Camera AI → chụp/ chọn ảnh → Tạo thử thách → Phản biện nhiều lượt. Trường hợp chưa có Gemini, có thể chọn **Chơi thử** (không gọi AI).
 
 ### Cập nhật từ GitHub v2
 
-**Cách an toàn:** GitHub Desktop → Clone repo → Sao chép/ghi đè các tệp từ ZIP v3 vào repo → Commit → Push origin. Không chép vào thư mục con, không xóa `.git`.
+**Cách an toàn:** GitHub Desktop → Clone repo → Sao chép/ghi đè các tệp từ ZIP v3.1 vào repo → Commit → Push origin. Không chép vào thư mục con, không xóa `.git`.
 
 Tệp `shared/curriculum.js` của v2 **không còn dùng**: có thể xóa khỏi repository để sạch dự án; nếu chưa xóa thì app v3 không import tệp này nữa.
 

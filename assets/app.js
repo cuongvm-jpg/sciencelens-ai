@@ -55,16 +55,24 @@ function renderDemos(){
 function changeMode(mode){
   if(state.busy)return;stopCamera();clearPhoto();state.mode=mode;renderMode();touch();
 }
-// Cắt ảnh sao cho đúng khung camera 4:3 đang nhìn thấy; khống chế kích thước trước khi gửi API.
-function imageFromSource(source,width,height){
-  const desired=4/3;const sourceRatio=width/height;
-  let sx=0,sy=0,sw=width,sh=height;
-  if(sourceRatio>desired){sw=height*desired;sx=(width-sw)/2}
-  else{sh=width/desired;sy=(height-sh)/2}
-  const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=768;
+// Khung ngắm 16:9 đồng nhất với ảnh camera gửi AI.
+// Với ảnh chọn từ thư viện: giữ TOÀN BỘ ảnh trong khung (contain) để không cắt mất hiện tượng.
+function imageFromSource(source,width,height,{crop=false}={}){
+  const desired=16/9;const ratio=width/height;
+  const canvas=document.createElement('canvas');canvas.width=1280;canvas.height=720;
   const ctx=canvas.getContext('2d',{alpha:false});if(!ctx)throw Error('Không xử lý được ảnh trên thiết bị này.');
-  ctx.fillStyle='#fff';ctx.fillRect(0,0,1024,768);ctx.drawImage(source,sx,sy,sw,sh,0,0,1024,768);
-  const data=canvas.toDataURL('image/jpeg',.66);canvas.width=1;canvas.height=1;
+  ctx.fillStyle='#f8fafc';ctx.fillRect(0,0,canvas.width,canvas.height);
+  if(crop){
+    let sx=0,sy=0,sw=width,sh=height;
+    if(ratio>desired){sw=height*desired;sx=(width-sw)/2}
+    else{sh=width/desired;sy=(height-sh)/2}
+    ctx.drawImage(source,sx,sy,sw,sh,0,0,canvas.width,canvas.height);
+  }else{
+    const scale=Math.min(canvas.width/width,canvas.height/height);
+    const dw=Math.round(width*scale),dh=Math.round(height*scale);
+    ctx.drawImage(source,0,0,width,height,(canvas.width-dw)/2,(canvas.height-dh)/2,dw,dh);
+  }
+  const data=canvas.toDataURL('image/jpeg',.72);canvas.width=1;canvas.height=1;
   if(data.length>2_100_000)throw Error('Ảnh quá lớn, hãy thử lại.');return data;
 }
 function usePhoto(data){
@@ -77,7 +85,7 @@ async function openCamera(){
   touch();if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia){toast('Vui lòng dùng HTTPS hoặc chọn ảnh từ thiết bị.');return}
   stopCamera();clearPhoto();
   try{
-    const stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:960}}});
+    const stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720},aspectRatio:{ideal:16/9}}});
     state.stream=stream;const video=$('cameraVideo');video.srcObject=stream;
     await video.play();show('cameraPlaceholder',false);show('photoPreview',false);
     show('cameraVideo',true);show('cameraLive',true);
@@ -86,7 +94,7 @@ async function openCamera(){
 }
 function takePhoto(){
   const video=$('cameraVideo');if(!video.videoWidth||!video.videoHeight){toast('Camera chưa sẵn sàng.');return}
-  try{usePhoto(imageFromSource(video,video.videoWidth,video.videoHeight))}
+  try{usePhoto(imageFromSource(video,video.videoWidth,video.videoHeight,{crop:true}))}
   catch(e){toast(e.message||'Không chụp được ảnh.')}
 }
 async function chooseFile(event){
@@ -112,7 +120,8 @@ async function callAPI(payload){
 }
 function setMissionBusy(isBusy){
   state.busy=isBusy;$('createMission').disabled=isBusy||!state.photo;
-  $('createMission').textContent=isBusy?'✨ AI đang xây thử thách...':'✨ Tạo thử thách từ ảnh →';
+  const label=$('createMission').querySelector('.cta-label');
+  if(label)label.textContent=isBusy?'Mây đang tạo thử thách...':'Tạo thử thách từ ảnh';
 }
 async function createMission(){
   if(!state.photo||state.busy)return;
