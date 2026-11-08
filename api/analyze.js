@@ -130,7 +130,7 @@ Hãy tạo phản hồi riêng cho câu này và một câu hỏi để tiếp t
   return {reply:txt(data.reply,800)||'Cậu có thể giải thích bằng một quan sát thực tế không?',verdict:alreadySolved?'solved':verdict,followUp:txt(data.followUp,300),insight:txt(data.insight,280)};
 }
 
-export async function GET(){return json({configured:Boolean(process.env.GEMINI_API_KEY),version:'3.1.0',database:false,topicRestriction:false})}
+export async function GET(){return json({configured:Boolean(process.env.GEMINI_API_KEY),version:'3.2.0',database:false,topicRestriction:false})}
 export async function POST(request){
   if(!process.env.GEMINI_API_KEY)return json({error:'Chưa cấu hình GEMINI_API_KEY. Hãy sử dụng chế độ Chơi thử.'},503);
   if(!(request.headers.get('content-type')||'').includes('application/json'))return json({error:'Yêu cầu phải là JSON.'},415);

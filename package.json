@@ -1,6 +1,6 @@
 {
-  "name": "sciencelens-lab-v3.1",
-  "version": "3.1.0",
+  "name": "sciencelens-lab-v3.2",
+  "version": "3.2.0",
   "private": true,
   "type": "module",
   "description": "ScienceLens AI: camera tu chon chu de, robot phan bien, Vercel stateless",

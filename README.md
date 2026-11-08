@@ -1,8 +1,17 @@
-# ScienceLens AI v3.1 — Camera gọn, UI giáo dục rõ ràng
+# ScienceLens AI v3.2 — Camera chạy trong trang điện thoại
 
 Ứng dụng độc lập chạy trên **Vercel**, không dùng ToanX, không tài khoản, không cơ sở dữ liệu.
 
-## Cập nhật UI/UX v3.1
+## Sửa lỗi camera toàn màn hình trên điện thoại (v3.2)
+
+- Video camera được hiển thị trong khung 16:9 **trước khi** gọi `video.play()` (quan trọng với Safari/iOS, nơi phát video ẩn có thể khởi tạo trình phát toàn màn hình).
+- Bổ sung `playsinline`, `webkit-playsinline`, `muted`, tắt controls/Picture-in-Picture để ưu tiên phát hình trực tiếp trên trang.
+- Bên trong khung xem có **nút chụp ảnh tròn** và nút **Đóng** luôn hiện trong khi camera hoạt động. Nút **Chụp ảnh** phía dưới khung vẫn hoạt động.
+- Khi người dùng từ chối cấp quyền, không có camera hoặc trình duyệt không hỗ trợ, hiển thị lời nhắc và giữ nút **Chọn ảnh** để dùng ảnh từ máy.
+- Xử lý trường hợp học sinh rời trang trong lúc hộp thoại cấp quyền camera đang mở, tránh luồng camera bị bật lại sau khi rời trang.
+- Không thay đổi API, tính năng AI phản biện hoặc cách lưu dữ liệu phiên. Không cần nhập lại API key.
+
+## Cập nhật UI/UX v3.2
 
 - Camera **16:9** theo vùng xem, rộng tối đa **640px trên desktop**, co theo màn hình điện thoại (không đặt chiều cao cố định), tránh khung quá dài hoặc quá rộng.
 - Chụp trực tiếp được cắt đúng 16:9 như ảnh nhìn thấy; ảnh từ thư viện được **giữ nguyên toàn bộ nội dung**, thu nhỏ và có viền trống khi cần, tránh làm mất chi tiết hiện tượng.
@@ -26,12 +35,12 @@
    - `GEMINI_API_KEY`: API key lấy từ Google AI Studio.
    - `GEMINI_MODEL`: tên mô hình Gemini có hỗ trợ ảnh và xuất JSON (giữ tên mô hình đã hoạt động ở dự án cũ).
 3. Commit / Push mã nguồn lên nhánh Production của repository đang liên kết Vercel. Deploy tự động nếu Git integration được kết nối đúng.
-4. Mở `https://<ten-du-an>.vercel.app/api/analyze`. API trả về `version: "3.1.0"`, `configured: true` khi đã có khóa. Đây chỉ là kiểm tra cấu hình khóa, không phải kiểm tra quota hoặc khả năng gọi mô hình.
+4. Mở `https://<ten-du-an>.vercel.app/api/analyze`. API trả về `version: "3.2.0"`, `configured: true` khi đã có khóa. Đây chỉ là kiểm tra cấu hình khóa, không phải kiểm tra quota hoặc khả năng gọi mô hình.
 5. Trên điện thoại (HTTPS): mở Camera AI → chụp/ chọn ảnh → Tạo thử thách → Phản biện nhiều lượt. Trường hợp chưa có Gemini, có thể chọn **Chơi thử** (không gọi AI).
 
 ### Cập nhật từ GitHub v2
 
-**Cách an toàn:** GitHub Desktop → Clone repo → Sao chép/ghi đè các tệp từ ZIP v3.1 vào repo → Commit → Push origin. Không chép vào thư mục con, không xóa `.git`.
+**Cách an toàn:** GitHub Desktop → Clone repo → Sao chép/ghi đè các tệp từ ZIP v3.2 vào repo → Commit → Push origin. Không chép vào thư mục con, không xóa `.git`.
 
 Tệp `shared/curriculum.js` của v2 **không còn dùng**: có thể xóa khỏi repository để sạch dự án; nếu chưa xóa thì app v3 không import tệp này nữa.
 

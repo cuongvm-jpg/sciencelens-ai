@@ -7,7 +7,7 @@ const idleMs=15*60*1000;
 const state={
   mode:'camera', photo:'',stream:null,
   current:null, demo:true,messages:[],solved:false,sparks:0,hintSeen:false,
-  busy:false,abort:null,idleTimer:null,toastTimer:null,roundCounter:0
+  busy:false,abort:null,idleTimer:null,toastTimer:null,roundCounter:0,cameraGeneration:0
 };
 function toast(message,ms=3700){
   clearTimeout(state.toastTimer);text('toast',message);show('toast',true);
@@ -15,14 +15,25 @@ function toast(message,ms=3700){
 }
 function touch(){clearTimeout(state.idleTimer);state.idleTimer=setTimeout(()=>reset(true,'Phiên tạm đã được xóa sau 15 phút.'),idleMs)}
 function stopCamera(){
+  // Vô hiệu hóa các yêu cầu getUserMedia đang chờ quyền trên điện thoại.
+  state.cameraGeneration++;
   if(state.stream){state.stream.getTracks().forEach(track=>track.stop());state.stream=null}
-  const video=$('cameraVideo');try{video.pause()}catch{}video.srcObject=null;
-  show('cameraVideo',false);show('cameraLive',false);
+  const video=$('cameraVideo');
+  try{video.pause()}catch{}
+  video.srcObject=null;
+  show('cameraVideo',false);show('cameraLive',false);show('cameraInlineControls',false);
 }
+function closeInlineCamera(){
+  stopCamera();
+  show('cameraPlaceholder',true);
+  show('openCamera',true);show('snapPhoto',false);
+  touch();
+}
+
 function clearPhoto(){
   state.photo='';const preview=$('photoPreview');preview.removeAttribute('src');
   show('photoPreview',false);show('cameraPlaceholder',true);$('photoFile').value='';
-  show('retakePhoto',false);show('openCamera',true);show('snapPhoto',false);
+  show('retakePhoto',false);show('openCamera',true);show('snapPhoto',false);show('cameraInlineControls',false);
   $('createMission').disabled=true;
 }
 function reset(announce=false,message='Đã kết thúc và xóa nội dung phiên trên ứng dụng.'){
@@ -82,16 +93,51 @@ function usePhoto(data){
   $('createMission').disabled=false;touch();
 }
 async function openCamera(){
-  touch();if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia){toast('Vui lòng dùng HTTPS hoặc chọn ảnh từ thiết bị.');return}
+  touch();
+  if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia){
+    toast('Thiết bị không hỗ trợ camera trong trang. Hãy dùng HTTPS hoặc chọn ảnh.');return;
+  }
   stopCamera();clearPhoto();
+  const generation=state.cameraGeneration;
+  const opener=$('openCamera');
+  opener.disabled=true;opener.textContent='Đang mở camera...';
   try{
-    const stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720},aspectRatio:{ideal:16/9}}});
-    state.stream=stream;const video=$('cameraVideo');video.srcObject=stream;
-    await video.play();show('cameraPlaceholder',false);show('photoPreview',false);
-    show('cameraVideo',true);show('cameraLive',true);
+    const stream=await navigator.mediaDevices.getUserMedia({
+      audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720},aspectRatio:{ideal:16/9}}
+    });
+    if(generation!==state.cameraGeneration){stream.getTracks().forEach(t=>t.stop());return}
+    const video=$('cameraVideo');
+    // Safari / iOS: video PHẢI hiển thị trong DOM trước khi gọi play().
+    // Phát video trong display:none trên iPhone có thể mở trình phát toàn màn hình.
+    video.setAttribute('playsinline','');
+    video.setAttribute('webkit-playsinline','true');
+    video.setAttribute('x-webkit-airplay','deny');
+    video.playsInline=true;
+    video.muted=true;video.autoplay=true;video.controls=false;
+    video.disablePictureInPicture=true;
+    state.stream=stream;
+    show('cameraPlaceholder',false);show('photoPreview',false);
+    show('cameraVideo',true);show('cameraLive',true);show('cameraInlineControls',true);
     show('openCamera',false);show('snapPhoto',true);
-  }catch{stopCamera();toast('Chưa mở được camera. Hãy cấp quyền camera hoặc chọn ảnh có sẵn.')}
+    video.srcObject=stream;
+    await video.play();
+    if(generation!==state.cameraGeneration)return;
+    // Tự thoát native fullscreen nếu một bản Safari cũ vẫn tự kích hoạt.
+    if(video.webkitDisplayingFullscreen && typeof video.webkitExitFullscreen==='function'){
+      try{video.webkitExitFullscreen()}catch{}
+    }
+  }catch(e){
+    if(generation!==state.cameraGeneration)return;
+    closeInlineCamera();
+    const reason=e?.name==='NotAllowedError'?'Hãy cho phép trang web dùng camera.':
+      e?.name==='NotFoundError'?'Không tìm thấy camera trên thiết bị.':
+      'Không mở được camera trong trang này.';
+    toast(reason+' Bạn vẫn có thể chọn ảnh có sẵn.',5500);
+  }finally{
+    opener.disabled=false;opener.textContent='📷 Mở camera';
+  }
 }
+
 function takePhoto(){
   const video=$('cameraVideo');if(!video.videoWidth||!video.videoHeight){toast('Camera chưa sẵn sàng.');return}
   try{usePhoto(imageFromSource(video,video.videoWidth,video.videoHeight,{crop:true}))}
@@ -237,6 +283,8 @@ $('tabDemo').addEventListener('click',()=>changeMode('demo'));
 $('tabCamera').addEventListener('click',()=>changeMode('camera'));
 $('openCamera').addEventListener('click',openCamera);$('snapPhoto').addEventListener('click',takePhoto);
 $('retakePhoto').addEventListener('click',openCamera);
+$('snapInline').addEventListener('click',takePhoto);
+$('closeCamera').addEventListener('click',closeInlineCamera);
 $('choosePhoto').addEventListener('click',()=>$('photoFile').click());
 $('photoFile').addEventListener('change',chooseFile);
 $('createMission').addEventListener('click',createMission);

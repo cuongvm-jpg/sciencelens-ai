@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f8f7fc" />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="ScienceLens AI — Chụp thế giới thật, bắt lỗi robot khoa học, học bằng phản biện." />
-  <title>ScienceLens AI · Bắt lỗi Mây v3.1</title>
+  <title>ScienceLens AI · Bắt lỗi Mây v3.2</title>
   <link rel="stylesheet" href="/assets/styles.css" />
   <script type="module" src="/assets/app.js"></script>
 </head>
@@ -55,7 +55,7 @@
         <section id="cameraPanel" class="camera-panel">
           <div class="camera-heading"><span><span class="camera-heading-star" aria-hidden="true">✦</span> Góc quan sát của em</span><span class="camera-heading-note">AI tự tìm điều thú vị</span></div>
           <div id="cameraViewport" class="camera-viewport">
-            <video id="cameraVideo" autoplay playsinline muted aria-label="Camera trực tiếp" class="hidden"></video>
+            <video id="cameraVideo" autoplay muted playsinline webkit-playsinline="true" x-webkit-airplay="deny" disablepictureinpicture preload="none" aria-label="Camera trực tiếp trong khung" class="hidden"></video>
             <img id="photoPreview" alt="Ảnh thí nghiệm đã chụp" class="hidden" />
             <div id="cameraPlaceholder" class="camera-placeholder">
               <span class="camera-symbol" aria-hidden="true">📷</span>
@@ -64,6 +64,10 @@
             </div>
             <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
             <span id="cameraLive" class="live-chip hidden"><span></span>LIVE</span>
+            <div id="cameraInlineControls" class="camera-inline-controls hidden" role="group" aria-label="Chụp ảnh ngay trong khung camera">
+              <button type="button" id="snapInline" class="camera-shutter" aria-label="Chụp ảnh" title="Chụp ảnh"><span aria-hidden="true"></span></button>
+              <button type="button" id="closeCamera" class="camera-close" aria-label="Đóng camera">✕ <span>Đóng</span></button>
+            </div>
           </div>
           <div class="camera-buttons">
             <button class="btn btn-soft" id="openCamera" type="button">📷 Mở camera</button>
