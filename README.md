@@ -1,73 +1,47 @@
-# ScienceLens AI v3.2 — Camera chạy trong trang điện thoại
+# ScienceLens AI v3.3 — Camera điện thoại có nút chụp
 
-Ứng dụng độc lập chạy trên **Vercel**, không dùng ToanX, không tài khoản, không cơ sở dữ liệu.
+Ứng dụng độc lập trên Vercel; không tài khoản, không database, không lưu lịch sử trên server ứng dụng. Giữ nguyên chức năng AI nhận ảnh bất kỳ, tạo nhận định khoa học sai để phản biện nhiều lượt.
 
-## Sửa lỗi camera toàn màn hình trên điện thoại (v3.2)
+## Sửa lỗi camera toàn màn hình
 
-- Video camera được hiển thị trong khung 16:9 **trước khi** gọi `video.play()` (quan trọng với Safari/iOS, nơi phát video ẩn có thể khởi tạo trình phát toàn màn hình).
-- Bổ sung `playsinline`, `webkit-playsinline`, `muted`, tắt controls/Picture-in-Picture để ưu tiên phát hình trực tiếp trên trang.
-- Bên trong khung xem có **nút chụp ảnh tròn** và nút **Đóng** luôn hiện trong khi camera hoạt động. Nút **Chụp ảnh** phía dưới khung vẫn hoạt động.
-- Khi người dùng từ chối cấp quyền, không có camera hoặc trình duyệt không hỗ trợ, hiển thị lời nhắc và giữ nút **Chọn ảnh** để dùng ảnh từ máy.
-- Xử lý trường hợp học sinh rời trang trong lúc hộp thoại cấp quyền camera đang mở, tránh luồng camera bị bật lại sau khi rời trang.
-- Không thay đổi API, tính năng AI phản biện hoặc cách lưu dữ liệu phiên. Không cần nhập lại API key.
+**Trên iPhone/Android:** nút **Chụp ảnh** mở giao diện camera **gốc của hệ điều hành** bằng HTML Media Capture: `<input type="file" accept="image/*" capture="environment">`. Camera native có nút chụp và bước xác nhận (ví dụ “Use Photo” / “Dùng ảnh”). Sau khi người dùng **xác nhận ảnh**, hệ điều hành tự đóng giao diện camera và trả ảnh về ứng dụng. ScienceLens hiển thị ảnh xem trước trong khung 16:9 và bật nút **Tạo thử thách từ ảnh**. Nút **Chụp lại** sử dụng cùng luồng. Khi hủy chụp lại, ảnh cũ được giữ nguyên.
 
-## Cập nhật UI/UX v3.2
+**Tại sao không chèn thêm một nút HTML trên toàn màn hình?** Trên một số trình duyệt iOS hoặc WebView, camera dùng `getUserMedia()` có thể bị mở như trình phát video native toàn màn hình. Trang HTML **không thể vẽ nút chụp phía trên trình phát này**. Vì vậy bản v3.3 **không mở video stream trên điện thoại**, mà giao cho hệ điều hành thực hiện toàn bộ thao tác chụp.
 
-- Camera **16:9** theo vùng xem, rộng tối đa **640px trên desktop**, co theo màn hình điện thoại (không đặt chiều cao cố định), tránh khung quá dài hoặc quá rộng.
-- Chụp trực tiếp được cắt đúng 16:9 như ảnh nhìn thấy; ảnh từ thư viện được **giữ nguyên toàn bộ nội dung**, thu nhỏ và có viền trống khi cần, tránh làm mất chi tiết hiện tượng.
-- Nút **Tạo thử thách từ ảnh** đặt giữa, chiều rộng tối đa 490px trên desktop, đầy chiều rộng trên điện thoại, kiểu màu tím giáo dục, chữ căn giữa, trạng thái bị khóa vẫn dễ đọc.
-- Cải thiện độ tương phản, kích thước chữ tiếng Việt, khoảng cách và mục tiêu chạm >= 48px cho các thao tác quan trọng. Không tải font bên thứ ba.
-- Giữ nguyên cơ chế AI nhận ảnh tự do, phản biện liên tục, dữ liệu phiên tạm và Gemini API key cũ.
+**Trên laptop/desktop:** nút **Mở camera** vẫn dùng preview video 16:9 trong trang cùng nút chụp; **Chọn ảnh** cho phép tải ảnh từ máy. Nếu trình duyệt mobile không hỗ trợ `capture`, nó có thể mở bộ chọn ảnh thông thường thay vì camera; trong trường hợp đó hãy chọn “Chụp ảnh/Take Photo” nếu có hoặc chọn ảnh có sẵn. Không thể bảo đảm giống nhau với mọi trình duyệt/hệ điều hành.
 
-## Thay đổi so với bản v2
+## Hướng dẫn cập nhật lên Vercel
 
-- **Đã bỏ hoàn toàn chọn khối 6–9 và chọn chủ đề.** AI tự xem ảnh và chọn khía cạnh khoa học phổ thông phù hợp; không có danh sách môn/chủ đề khóa cứng.
-- Đầu trang ưu tiên **Camera AI**, "Chơi thử" là chế độ mẫu dự phòng với bốn thử thách tự soạn.
-- Robot Mây đưa ra một **nhận định sai có chủ ý** dựa vào vật thể thực tế và yêu cầu người học bác bỏ bằng bằng chứng.
-- Đối thoại phản biện nhiều lượt; khi lập luận đủ thuyết phục, robot thừa nhận sai, trả kết luận đúng và có thể trao đổi tiếp.
-- Hai lượt xử lý AI lúc tạo thử thách: (1) phân tích ảnh và tạo ngộ nhận; (2) kiểm duyệt độ đúng/sai và mức độ an toàn. AI vẫn có thể sai, cần kiểm tra khi dùng trong lớp.
-- Camera có chiều cao giới hạn để không chiếm màn hình điện thoại; không upload ảnh lên database.
+1. Giải nén ZIP và **sao chép toàn bộ các file bên trong** vào thư mục GitHub repository `sciencelens-ai` đã kết nối Vercel, chọn **Replace** khi Windows hỏi ghi đè. Không đưa cả thư mục ZIP vào một thư mục con của repository; không xóa `.git`.
+2. GitHub Desktop → **Commit to main** → **Push origin**. Vercel sẽ tự deploy nếu Git integration đang hoạt động.
+3. Không cần nhập lại `GEMINI_API_KEY` hay `GEMINI_MODEL`.
+4. Kiểm tra `https://<du-an>.vercel.app/api/analyze`: nếu đúng phiên bản mới trả về `"version":"3.3.0"`.
+5. Dùng tab mới trên điện thoại hoặc tải lại bỏ cache. **Camera AI → Chụp ảnh → chụp bằng nút ở đáy camera hệ điều hành → xác nhận/Dùng ảnh → trở về ScienceLens → Tạo thử thách từ ảnh**.
 
-## Chạy trên Vercel
-
-1. Giải nén ZIP, đặt các tệp `index.html`, `vercel.json`, `package.json` và thư mục `api`, `assets`, `shared` trực tiếp trong root của GitHub repository.
-2. Vercel → Project → Settings → Environment Variables:
-   - `GEMINI_API_KEY`: API key lấy từ Google AI Studio.
-   - `GEMINI_MODEL`: tên mô hình Gemini có hỗ trợ ảnh và xuất JSON (giữ tên mô hình đã hoạt động ở dự án cũ).
-3. Commit / Push mã nguồn lên nhánh Production của repository đang liên kết Vercel. Deploy tự động nếu Git integration được kết nối đúng.
-4. Mở `https://<ten-du-an>.vercel.app/api/analyze`. API trả về `version: "3.2.0"`, `configured: true` khi đã có khóa. Đây chỉ là kiểm tra cấu hình khóa, không phải kiểm tra quota hoặc khả năng gọi mô hình.
-5. Trên điện thoại (HTTPS): mở Camera AI → chụp/ chọn ảnh → Tạo thử thách → Phản biện nhiều lượt. Trường hợp chưa có Gemini, có thể chọn **Chơi thử** (không gọi AI).
-
-### Cập nhật từ GitHub v2
-
-**Cách an toàn:** GitHub Desktop → Clone repo → Sao chép/ghi đè các tệp từ ZIP v3.2 vào repo → Commit → Push origin. Không chép vào thư mục con, không xóa `.git`.
-
-Tệp `shared/curriculum.js` của v2 **không còn dùng**: có thể xóa khỏi repository để sạch dự án; nếu chưa xóa thì app v3 không import tệp này nữa.
-
-### Kiểm thử
+## Kiểm thử
 
 ```bash
 npm test
 ```
 
-Không có server Python, MariaDB, Firebase, n8n hay hệ thống đăng nhập. Các API nằm trong `api/analyze.js`.
+Đã kiểm tra cú pháp JavaScript, API giả lập và luồng chọn tệp/native capture trên Chromium mô phỏng các độ rộng 360, 390, 768 px; desktop camera nội tuyến ở 1440 px. **Chưa chạy camera vật lý trên iPhone/Android**, vì giao diện camera gốc do hệ điều hành điều khiển, không thể mô phỏng đầy đủ bằng browser headless.
 
-## Quyền riêng tư và giới hạn
+## Dữ liệu và quyền riêng tư
 
-- Ảnh, hội thoại và tình trạng phiên chỉ lưu ở **RAM của trang trình duyệt** cho đến khi kết thúc, rời trang hoặc hết thời gian không thao tác theo cơ chế của frontend. Trình duyệt có thể giữ tab trong bộ nhớ khi ở nền; không cam kết xóa tức thì khỏi mọi nơi.
-- Ảnh được gửi qua Vercel Function đến Gemini để xử lý. Ứng dụng không lưu chủ động vào disk/database, tuy nhiên hạ tầng Vercel/Gemini có chính sách xử lý và lưu giữ dữ liệu riêng. Không chụp khuôn mặt hay giấy tờ cá nhân.
-- Không bao giờ ghi khóa Gemini vào mã client hay GitHub. Thiết lập quota/cảnh báo chi phí nếu chia sẻ công khai, vì bản demo không có xác thực/rate-limit theo người dùng.
-- AI không thể bảo đảm độ chính xác 100%. Nếu ảnh không rõ, có mặt người hoặc không tạo được câu hỏi có cơ sở, ứng dụng yêu cầu chụp lại, thay vì bịa khoa học.
+- Ảnh chỉ ở bộ nhớ trình duyệt trước khi học sinh bấm **Tạo thử thách từ ảnh**. Sau đó ảnh được gửi đến Gemini qua Vercel Function để AI phân tích. Không lưu database hoặc file ảnh trên ứng dụng.
+- Nút kết thúc phiên/xóa phiên xóa trạng thái tạm trên web, **không thể xóa dữ liệu do nhà cung cấp API hoặc hệ điều hành lưu**. Tùy điện thoại, ứng dụng camera hệ điều hành **có thể lưu một bản ảnh vào thư viện**. Không chụp người hay thông tin riêng tư.
+- Gemini API key nằm trong biến môi trường Vercel, không đi vào client. Nên thiết lập quota để tránh lạm dụng API khi app công khai.
 
 ## Cấu trúc
 
 ```
 index.html
-assets/styles.css
 assets/app.js
+assets/styles.css
 api/analyze.js
 shared/demo.js
 tests/smoke.test.mjs
+tests/native-camera.test.mjs
 package.json
 vercel.json
 .env.example

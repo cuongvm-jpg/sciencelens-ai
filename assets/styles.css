@@ -266,3 +266,19 @@ button:disabled{opacity:1}
   .camera-shutter{width:54px;height:54px;border-width:3px}
   .camera-close{bottom:6px;padding:8px 10px;font-size:12px;min-height:40px}
 }
+
+
+/* v3.3: input được kích hoạt bằng một cú chạm thật, camera native tự có shutter. */
+.native-camera-input{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  overflow:hidden;
+  opacity:0;
+  pointer-events:none;
+  clip-path:inset(50%);
+}
+@media (pointer:coarse){
+  .camera-buttons #openCamera{font-size:15px;min-height:52px}
+  .camera-buttons #retakePhoto{font-size:15px;min-height:52px}
+}

@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const js=readFileSync(new URL('../assets/app.js',import.meta.url),'utf8');
+assert.match(html,/<input[^>]*id="nativeCapture"[^>]*capture="environment"/);
+assert.match(html,/<input[^>]*id="nativeCapture"[^>]*accept="image\/\*"/);
+assert.match(js,/if\(preferNativeCapture\(\)\)\{launchNativeCamera\(\);return\}/);
+assert.match(js,/picker\.click\(\)/);
+assert.match(js,/\$\('nativeCapture'\)\.addEventListener\('change',chooseFile\)/);
+assert.match(js,/usePhoto\(data\)/);
+assert.match(js,/if\(!file\)return; \/\/ Hủy chụp/);
+console.log('PASS: nativeCapture environment, mobile bypasses inline video, photo return and cancellation.');

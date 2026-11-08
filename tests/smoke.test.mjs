@@ -11,7 +11,7 @@ const originalModel=process.env.GEMINI_MODEL;
 delete process.env.GEMINI_API_KEY;
 const check=await (await GET()).json();
 assert.equal(check.configured,false);
-assert.equal(check.version,'3.2.0');
+assert.equal(check.version,'3.3.0');
 assert.equal(check.topicRestriction,false);
 const req=body=>new Request('https://example.invalid/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
 assert.equal((await POST(req({mode:'challenge',image:'A'.repeat(240)}))).status,503);

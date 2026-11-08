@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f8f7fc" />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="ScienceLens AI — Chụp thế giới thật, bắt lỗi robot khoa học, học bằng phản biện." />
-  <title>ScienceLens AI · Bắt lỗi Mây v3.2</title>
+  <title>ScienceLens AI · Bắt lỗi Mây v3.3</title>
   <link rel="stylesheet" href="/assets/styles.css" />
   <script type="module" src="/assets/app.js"></script>
 </head>
@@ -59,8 +59,8 @@
             <img id="photoPreview" alt="Ảnh thí nghiệm đã chụp" class="hidden" />
             <div id="cameraPlaceholder" class="camera-placeholder">
               <span class="camera-symbol" aria-hidden="true">📷</span>
-              <strong>Hướng camera vào vật em muốn khám phá</strong>
-              <span>Chụp một ảnh để bắt đầu</span>
+              <strong id="cameraPlaceholderTitle">Hướng camera vào vật em muốn khám phá</strong>
+              <span id="cameraPlaceholderHint">Chụp một ảnh để bắt đầu</span>
             </div>
             <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
             <span id="cameraLive" class="live-chip hidden"><span></span>LIVE</span>
@@ -75,6 +75,8 @@
             <button class="btn btn-soft hidden" id="retakePhoto" type="button">↻ Chụp lại</button>
             <button class="btn btn-ghost" id="choosePhoto" type="button">Chọn ảnh</button>
             <input type="file" id="photoFile" accept="image/*" hidden />
+            <!-- Camera hệ điều hành: trên iOS/Android có nút chụp native và trở về trang sau khi xác nhận ảnh. -->
+            <input type="file" id="nativeCapture" accept="image/*" capture="environment" class="native-camera-input" tabindex="-1" aria-label="Chụp ảnh bằng camera điện thoại" />
           </div>
           <button class="btn btn-primary create-mission-btn" id="createMission" type="button" disabled><span class="cta-icon" aria-hidden="true">✦</span><span class="cta-label">Tạo thử thách từ ảnh</span><span class="cta-arrow" aria-hidden="true">→</span></button>
           <div class="privacy-inline">🔒 Chỉ chụp đồ vật, không chụp thông tin cá nhân.</div>

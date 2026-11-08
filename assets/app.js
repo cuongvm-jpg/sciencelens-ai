@@ -14,6 +14,26 @@ function toast(message,ms=3700){
   state.toastTimer=setTimeout(()=>show('toast',false),ms);
 }
 function touch(){clearTimeout(state.idleTimer);state.idleTimer=setTimeout(()=>reset(true,'Phiên tạm đã được xóa sau 15 phút.'),idleMs)}
+// Trên điện thoại ưu tiên camera HỆ ĐIỀU HÀNH (input capture) thay vì
+// video.getUserMedia: WebKit đôi khi đưa video vào trình phát full screen
+// không có nút chụp của ứng dụng. Ảnh chỉ được nhận sau khi người dùng chọn
+// Use Photo / OK trong giao diện camera native.
+function preferNativeCapture(){
+  return !!navigator.userAgentData?.mobile ||
+    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent||'') ||
+    (navigator.maxTouchPoints>0 && matchMedia('(pointer:coarse)').matches && innerWidth<=1200);
+}
+function launchNativeCamera(){
+  touch();
+  stopCamera();
+  const picker=$('nativeCapture');
+  picker.value=''; // chụp lại cùng ảnh cũng phát sinh change
+  // PHẢI gọi sync từ event click: Safari yêu cầu transient user activation.
+  try{picker.click()}catch{
+    toast('Không thể mở camera hệ điều hành. Hãy chọn ảnh hoặc thử trình duyệt khác.',5600);
+  }
+}
+
 function stopCamera(){
   // Vô hiệu hóa các yêu cầu getUserMedia đang chờ quyền trên điện thoại.
   state.cameraGeneration++;
@@ -93,6 +113,9 @@ function usePhoto(data){
   $('createMission').disabled=false;touch();
 }
 async function openCamera(){
+  // iPhone/Android: mở camera gốc có nút chụp lớn ở đáy, xác nhận ảnh
+  // sẽ tự đóng giao diện camera và quay về ScienceLens. Không gọi video.play().
+  if(preferNativeCapture()){launchNativeCamera();return}
   touch();
   if(!window.isSecureContext||!navigator.mediaDevices?.getUserMedia){
     toast('Thiết bị không hỗ trợ camera trong trang. Hãy dùng HTTPS hoặc chọn ảnh.');return;
@@ -144,12 +167,23 @@ function takePhoto(){
   catch(e){toast(e.message||'Không chụp được ảnh.')}
 }
 async function chooseFile(event){
-  const file=event.target.files?.[0];if(!file)return;
-  if(!file.type.startsWith('image/')){toast('Hãy chọn tệp hình ảnh.');return}
-  const url=URL.createObjectURL(file);const img=new Image();
-  try{img.src=url;await img.decode();usePhoto(imageFromSource(img,img.naturalWidth,img.naturalHeight))}
-  catch(e){toast(e.message||'Không đọc được ảnh.')}
-  finally{img.removeAttribute('src');URL.revokeObjectURL(url)}
+  const file=event.target.files?.[0];
+  if(!file)return; // Hủy chụp: không xóa ảnh đã chọn trước đó.
+  if(file.type && !file.type.startsWith('image/')){
+    toast('Hãy chọn tệp hình ảnh.');return;
+  }
+  const url=URL.createObjectURL(file),img=new Image();
+  try{
+    img.src=url;
+    await img.decode();
+    const data=imageFromSource(img,img.naturalWidth,img.naturalHeight);
+    usePhoto(data); // dừng luồng, hiện ảnh và bật Tạo thử thách
+    if(event.target.id==='nativeCapture'){
+      toast('Đã chụp xong! Bấm “Tạo thử thách từ ảnh” để khám phá.',3500);
+      requestAnimationFrame(()=>$('createMission')?.scrollIntoView({behavior:'smooth',block:'nearest'}));
+    }
+  }catch(e){toast((e?.message||'Không đọc được ảnh.')+' Hãy thử ảnh JPG hoặc PNG.',6000)}
+  finally{img.removeAttribute('src');URL.revokeObjectURL(url);event.target.value=''}
 }
 async function callAPI(payload){
   const ctrl=new AbortController();state.abort=ctrl;
@@ -287,6 +321,7 @@ $('snapInline').addEventListener('click',takePhoto);
 $('closeCamera').addEventListener('click',closeInlineCamera);
 $('choosePhoto').addEventListener('click',()=>$('photoFile').click());
 $('photoFile').addEventListener('change',chooseFile);
+$('nativeCapture').addEventListener('change',chooseFile);
 $('createMission').addEventListener('click',createMission);
 $('toggleExperiment').addEventListener('click',()=>{
   const open=$('experimentText').classList.contains('hidden');show('experimentText',open);
@@ -301,4 +336,13 @@ $('sendMessage').addEventListener('click',sendAnswer);
 window.addEventListener('pagehide',()=>{reset(false);clearTimeout(state.idleTimer)});
 window.addEventListener('pageshow',e=>{if(e.persisted)reset(false)});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){stopCamera();if(!state.photo){show('cameraPlaceholder',true);show('openCamera',true);show('snapPhoto',false)}}});
-renderMode();renderDemos();touch();
+renderMode();renderDemos();
+if(preferNativeCapture()){
+  text('openCamera','📷 Chụp ảnh');
+  text('retakePhoto','↻ Chụp lại');
+  text('cameraPlaceholderTitle','Chụp vật em muốn khám phá');
+  text('cameraPlaceholderHint','Camera điện thoại có nút chụp ở phía dưới');
+  const note=document.querySelector('.camera-heading-note');
+  if(note)note.textContent='Chụp xong, xác nhận để trở về';
+}
+touch();
