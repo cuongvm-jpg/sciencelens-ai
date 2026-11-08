@@ -1,4 +1,3 @@
-import { listTopics, getTopic } from '../shared/curriculum.js';
 import { DEMOS } from '../shared/demo.js';
 
 const $=id=>document.getElementById(id);
@@ -6,7 +5,7 @@ const show=(id,value)=>$(id)?.classList.toggle('hidden',!value);
 const text=(id,value)=>{if($(id))$(id).textContent=String(value??'')};
 const idleMs=15*60*1000;
 const state={
-  grade:8, mode:'demo', topicId:'auto', photo:'',stream:null,
+  mode:'camera', photo:'',stream:null,
   current:null, demo:true,messages:[],solved:false,sparks:0,hintSeen:false,
   busy:false,abort:null,idleTimer:null,toastTimer:null,roundCounter:0
 };
@@ -32,15 +31,9 @@ function reset(announce=false,message='Đã kết thúc và xóa nội dung phi�
   state.sparks=0;state.hintSeen=false;state.busy=false;
   $('messageInput').value='';show('chatNotice',false);show('winBanner',false);
   show('gameScreen',false);show('homeScreen',true);
-  renderMode();renderGrade();renderDemos();renderTopics();
+  renderMode();renderDemos();
   window.scrollTo({top:0,behavior:'instant'});
   touch();if(announce)toast(message);
-}
-function renderGrade(){
-  document.querySelectorAll('[data-grade]').forEach(btn=>{
-    const active=Number(btn.dataset.grade)===state.grade;
-    btn.classList.toggle('selected',active);btn.setAttribute('aria-pressed',String(active));
-  });
 }
 function renderMode(){
   const demo=state.mode==='demo';
@@ -48,16 +41,9 @@ function renderMode(){
   $('tabDemo').classList.toggle('active',demo);$('tabCamera').classList.toggle('active',!demo);
   $('tabDemo').setAttribute('aria-selected',String(demo));$('tabCamera').setAttribute('aria-selected',String(!demo));
 }
-function renderTopics(){
-  const select=$('topicSelect');select.replaceChildren();
-  const auto=document.createElement('option');auto.value='auto';auto.textContent='AI tự chọn trong lớp '+state.grade;select.append(auto);
-  listTopics(state.grade).forEach(t=>{const option=document.createElement('option');option.value=t.id;option.textContent=`${t.icon} ${t.title}`;select.append(option)});
-  if(state.topicId!=='auto'&&!getTopic(state.grade,state.topicId))state.topicId='auto';
-  select.value=state.topicId;
-}
 function renderDemos(){
   const grid=$('demoGrid');grid.replaceChildren();
-  DEMOS[state.grade].forEach((d,i)=>{
+  DEMOS.forEach((d,i)=>{
     const btn=document.createElement('button');btn.className='demo-card';btn.type='button';
     btn.setAttribute('aria-label','Thử thách mẫu: '+d.scene);
     const a=document.createElement('span');a.className='emoji';a.textContent=d.icon;
@@ -69,10 +55,6 @@ function renderDemos(){
 function changeMode(mode){
   if(state.busy)return;stopCamera();clearPhoto();state.mode=mode;renderMode();touch();
 }
-function changeGrade(grade){
-  if(state.busy)return;state.grade=grade;state.topicId='auto';stopCamera();clearPhoto();renderGrade();renderDemos();renderTopics();touch();
-}
-
 // Cắt ảnh sao cho đúng khung camera 4:3 đang nhìn thấy; khống chế kích thước trước khi gửi API.
 function imageFromSource(source,width,height){
   const desired=4/3;const sourceRatio=width/height;
@@ -136,33 +118,28 @@ async function createMission(){
   if(!state.photo||state.busy)return;
   const original=state.photo;setMissionBusy(true);touch();
   try{
-    const result=await callAPI({mode:'challenge',grade:state.grade,topicId:state.topicId,image:original.split(',')[1]});
-    if(!result.usable){toast(result.reason||'Ảnh chưa phù hợp kiến thức lớp này.',6500);return}
+    const result=await callAPI({mode:'challenge',image:original.split(',')[1]});
+    if(!result.usable){toast(result.reason||'Ảnh chưa rõ để tìm được thử thách khoa học.',6500);return}
+    setMissionBusy(false); // Tránh bong bóng 'đang nhập' tồn tại sau khi vào hội thoại.
     beginChallenge(result,false);
   }catch(e){if(e.name!=='AbortError')toast(e.message||'Không tạo được thử thách.',6200)}
   finally{setMissionBusy(false)}
 }
 function beginDemo(index){
-  touch();const d=DEMOS[state.grade][index];
-  const topic=getTopic(state.grade,d.topicId);
-  beginChallenge({
-    usable:true,grade:state.grade,topicId:d.topicId,topicTitle:topic.title,
-    scene:d.scene,claim:d.claim,prompt:d.prompt,hint:d.hint,
-    experiment:d.test,truth:d.truth,icon:d.icon,keys:d.keys
-  },true);
+  touch();const d=DEMOS[index];if(!d)return;
+  beginChallenge({...d,usable:true},true);
 }
 function beginChallenge(challenge,isDemo){
   stopCamera();state.current=challenge;state.demo=isDemo;state.messages=[];
   state.solved=false;state.sparks=0;state.hintSeen=false;state.roundCounter++;
-  const topic=getTopic(state.grade,challenge.topicId);
   if(!isDemo && state.photo){$('missionPicture').src=state.photo;show('missionPicture',true);show('missionAvatar',false)}
   else{$('missionPicture').removeAttribute('src');show('missionPicture',false);show('missionAvatar',true)}
-  text('roundLabel',`KHTN ${state.grade} · ${isDemo?'MẪU':'AI THẬT'}`);
-  text('missionTopic',topic?.title||challenge.topicTitle||'Khám phá khoa học');
-  text('missionScene',challenge.scene);text('missionAvatar',challenge.icon||topic?.icon||'🔍');
+  text('roundLabel',isDemo?'CHƠI THỬ':'KHÁM PHÁ TỪ ẢNH');
+  text('missionTopic',challenge.topicTitle||'Khoa học quanh em');
+  text('missionScene',challenge.scene);text('missionAvatar',challenge.icon||'🔬');
   text('experimentText',challenge.experiment);show('experimentText',false);
   $('toggleExperiment').setAttribute('aria-expanded','false');
-  text('chatStatus',isDemo?'Mô phỏng có sẵn · không dùng Gemini':'AI tạo từ ảnh · kiến thức lớp '+state.grade);
+  text('chatStatus',isDemo?'Hội thoại mẫu · không gọi AI':'Từ ảnh thật · đối thoại với AI');
   text('sparkCount','0');show('winBanner',false);show('chatNotice',false);
   $('messageInput').value='';show('homeScreen',false);show('gameScreen',true);
   state.messages.push({role:'bot',head:'MÂY KHẲNG ĐỊNH',text:`${challenge.claim}\n\n${challenge.prompt}`});
@@ -212,7 +189,7 @@ function demoRespond(answer){
   if(answer.length<14 || /^(sai|dung|khong|co|đúng|không|sai rồi)[.!\s]*$/i.test(answer.trim())){
     return {reply:'Ồ, cậu không đồng ý với tớ à? Nhưng tớ cần nghe LÍ DO để tin cơ!',verdict:'explore',followUp:'Em quan sát được điều gì làm bằng chứng?'};
   }
-  return {reply:'Lập luận thú vị đấy! Nhưng tớ chưa hiểu nó bác bỏ ý nào trong nhận định của tớ.',verdict:'almost',followUp:`Thử liên hệ điều này với kiến thức ${getTopic(state.grade,d.topicId)?.title.toLowerCase()||'đang học'} nhé.`};
+  return {reply:'Lập luận thú vị đấy! Nhưng tớ chưa hiểu nó bác bỏ phần nào trong nhận định của tớ.',verdict:'almost',followUp:`Hãy thử liên hệ với kiến thức ${String(d.topicTitle||'khoa học').toLowerCase()} nhé.`};
 }
 function setChatBusy(value){
   state.busy=value;$('sendMessage').disabled=value||$('messageInput').value.trim().length<2;
@@ -220,16 +197,13 @@ function setChatBusy(value){
 }
 async function sendAnswer(){
   const answer=$('messageInput').value.trim();if(answer.length<2||state.busy||!state.current)return;
-  if(state.messages.filter(m=>m.role==='user').length>=12){
-    text('chatNotice','Đã đủ 12 lượt phản biện trong một phiên. Hãy khám phá vật khác nhé.');show('chatNotice',true);return;
-  }
   touch();show('chatNotice',false);
   const history=state.messages.slice(-10).map(m=>({role:m.role,text:m.text}));
   state.messages.push({role:'user',text:answer});$('messageInput').value='';
   setChatBusy(true);renderConversation();progress(state.solved?'solved':'thinking');
   try{
     const result=state.demo?demoRespond(answer):await callAPI({
-      mode:'feedback',grade:state.grade,challenge:state.current,
+      mode:'feedback',challenge:state.current,alreadySolved:state.solved,
       answer,history
     });
     // Demo chạy không gọi mạng nhưng dùng cùng cơ chế phản hồi nhiều lượt.
@@ -250,10 +224,8 @@ async function sendAnswer(){
 $('resetTop').addEventListener('click',()=>reset(true));
 $('brandLink').addEventListener('click',e=>{e.preventDefault();reset(true)});
 $('backHome').addEventListener('click',()=>reset(true,'Đã xóa phiên cũ. Chọn hiện tượng mới nhé!'));
-document.querySelectorAll('[data-grade]').forEach(btn=>btn.addEventListener('click',()=>changeGrade(Number(btn.dataset.grade))));
 $('tabDemo').addEventListener('click',()=>changeMode('demo'));
 $('tabCamera').addEventListener('click',()=>changeMode('camera'));
-$('topicSelect').addEventListener('change',e=>{state.topicId=e.target.value;touch()});
 $('openCamera').addEventListener('click',openCamera);$('snapPhoto').addEventListener('click',takePhoto);
 $('retakePhoto').addEventListener('click',openCamera);
 $('choosePhoto').addEventListener('click',()=>$('photoFile').click());
@@ -272,4 +244,4 @@ $('sendMessage').addEventListener('click',sendAnswer);
 window.addEventListener('pagehide',()=>{reset(false);clearTimeout(state.idleTimer)});
 window.addEventListener('pageshow',e=>{if(e.persisted)reset(false)});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){stopCamera();if(!state.photo){show('cameraPlaceholder',true);show('openCamera',true);show('snapPhoto',false)}}});
-renderGrade();renderMode();renderTopics();renderDemos();touch();
+renderMode();renderDemos();touch();

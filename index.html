@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f8f7fc" />
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="ScienceLens AI — Chụp thế giới thật, bắt lỗi robot khoa học, học bằng phản biện." />
-  <title>ScienceLens AI · Bắt lỗi Mây</title>
+  <title>ScienceLens AI · Bắt lỗi Mây v3</title>
   <link rel="stylesheet" href="/assets/styles.css" />
   <script type="module" src="/assets/app.js"></script>
 </head>
@@ -29,7 +29,7 @@
         <div class="intro-copy">
           <div class="eyebrow"><span class="eyebrow-dot">✦</span> THÍ NGHIỆM TƯ DUY</div>
           <h1>Ồ! AI nói <span>SAI</span><br />rồi kìa.</h1>
-          <p>Chụp một hiện tượng khoa học, tìm lỗi trong lời robot và dùng bằng chứng để thuyết phục bạn ấy!</p>
+          <p>Chụp bất kỳ đồ vật nào. Mây tự tìm một điều khoa học đáng ngờ để cậu phản biện!</p>
           <div class="hero-chips" aria-label="Điểm độc đáo"><span>📸 Vật thật</span><span>🧩 Tư duy phản biện</span><span>💬 Đối thoại liên tục</span></div>
         </div>
         <div class="hero-visual" aria-hidden="true">
@@ -41,27 +41,19 @@
       </div>
 
       <div class="play-setup">
-        <div class="section-heading"><span class="num">01</span><div><h2>Chọn lớp của em</h2><p>Câu hỏi đúng độ khó, đúng kiến thức nền</p></div></div>
-        <div class="grade-options" id="gradeOptions" role="group" aria-label="Chọn khối lớp">
-          <button class="grade-btn" type="button" data-grade="6">Lớp 6</button>
-          <button class="grade-btn" type="button" data-grade="7">Lớp 7</button>
-          <button class="grade-btn selected" type="button" data-grade="8" aria-pressed="true">Lớp 8</button>
-          <button class="grade-btn" type="button" data-grade="9">Lớp 9</button>
-        </div>
-
-        <div class="section-heading with-margin"><span class="num">02</span><div><h2>Chọn cách khám phá</h2><p>Có thể chơi thử trước khi mở camera</p></div></div>
+        <div class="section-heading"><span class="num">✦</span><div><h2>Khám phá theo cách của em</h2><p>Không chọn lớp. Không giới hạn chủ đề.</p></div></div>
         <div class="tabs" role="tablist" aria-label="Chế độ khám phá">
-          <button id="tabDemo" class="tab active" type="button" role="tab" aria-selected="true">🧪 Chơi thử</button>
-          <button id="tabCamera" class="tab" type="button" role="tab" aria-selected="false">📷 Camera AI</button>
+          <button id="tabCamera" class="tab active" type="button" role="tab" aria-selected="true">📷 Camera AI</button>
+          <button id="tabDemo" class="tab" type="button" role="tab" aria-selected="false">🧪 Chơi thử</button>
         </div>
 
-        <section id="demoPanel" class="demo-panel">
-          <div class="demo-grid" id="demoGrid" aria-label="Chọn một tình huống"></div>
-          <div class="demo-disclaimer">Chế độ mẫu • Hội thoại mô phỏng, không gọi AI</div>
+        <section id="demoPanel" class="demo-panel hidden">
+          <div class="demo-grid" id="demoGrid" aria-label="Chọn một tình huống mẫu"></div>
+          <div class="demo-disclaimer">Kịch bản mẫu · Không gọi AI</div>
         </section>
 
-        <section id="cameraPanel" class="camera-panel hidden">
-          <div class="topic-row"><span>Chủ đề</span><select id="topicSelect" aria-label="Chọn chủ đề Khoa học tự nhiên"></select></div>
+        <section id="cameraPanel" class="camera-panel">
+          <div class="camera-heading"><span>✦ AI tự nhận biết hiện tượng</span><span>Không cần chọn chủ đề</span></div>
           <div id="cameraViewport" class="camera-viewport">
             <video id="cameraVideo" autoplay playsinline muted aria-label="Camera trực tiếp" class="hidden"></video>
             <img id="photoPreview" alt="Ảnh thí nghiệm đã chụp" class="hidden" />
@@ -81,7 +73,7 @@
             <input type="file" id="photoFile" accept="image/*" hidden />
           </div>
           <button class="btn btn-primary full-width" id="createMission" type="button" disabled>✨ Tạo thử thách từ ảnh <span aria-hidden="true">→</span></button>
-          <div class="privacy-inline">🔒 Chỉ chụp vật thể, không chụp người hoặc giấy tờ.</div>
+          <div class="privacy-inline">🔒 Không chụp người hoặc thông tin riêng tư.</div>
         </section>
       </div>
     </section>
@@ -89,7 +81,7 @@
     <section id="gameScreen" class="game-screen hidden">
       <div class="game-topline">
         <button class="back-button" id="backHome" type="button" aria-label="Khám phá hiện tượng mới">← <span>Khám phá khác</span></button>
-        <span class="round-label" id="roundLabel">KHTN 8</span>
+        <span class="round-label" id="roundLabel">AI TỰ KHÁM PHÁ</span>
       </div>
       <div class="game-grid">
         <aside class="mission-side">

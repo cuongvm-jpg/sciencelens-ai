@@ -1,23 +1,31 @@
-// Các tình huống DEMO soạn sẵn, không có AI phân tích ảnh.
-export const DEMOS = {
-  6: [
-    {topicId:'change', icon:'🧊', scene:'Đá viên đang tan', claim:'Tớ đoán khi đá tan thành nước thì một chất mới đã được tạo ra!', prompt:'Theo em, nhận định của tớ sai ở đâu? Em lấy bằng chứng gì?', hint:'Cùng là H₂O trước và sau khi tan.', test:'Để một viên đá trong cốc và quan sát khi nó tan; không cần đun nóng.', truth:'Đá tan chỉ chuyển từ thể rắn sang thể lỏng. Chất vẫn là nước, không tạo chất mới.', keys:['chuyển thể','vẫn là nước','không tạo','thể rắn','thể lỏng','h2o']},
-    {topicId:'friction', icon:'📚', scene:'Quyển sách trượt trên bàn', claim:'Tớ chắc rằng khi đẩy sách đi thì mặt bàn không thể tạo lực nào lên sách.', prompt:'Có lực nào giữa sách với bàn không? Em chứng minh thế nào?', hint:'Quan sát sách sau khi ngừng đẩy.', test:'Đẩy nhẹ quyển sách trên hai bề mặt nhẵn và nhám khác nhau.', truth:'Bề mặt bàn tác dụng lực ma sát lên sách, có thể cản trở chuyển động trượt.', keys:['ma sát','cản','chậm','dừng','bề mặt']},
-    {topicId:'energy', icon:'🔦', scene:'Đèn pin sáng', claim:'Đèn pin phát sáng mà chẳng cần tiêu thụ năng lượng nào cả!', prompt:'Vậy tại sao đèn cần pin? Em thử giải thích?', hint:'Chuyện gì xảy ra nếu tháo pin?', test:'Tắt/bật đèn pin thường, quan sát rồi tháo pin khi được phép.', truth:'Đèn pin chuyển năng lượng của pin thành ánh sáng và một phần nhiệt.', keys:['năng lượng','pin','chuyển','ánh sáng','điện']}
-  ],
-  7: [
-    {topicId:'reflection', icon:'🪞', scene:'Chiếc gương', claim:'Tớ nghĩ gương tự tạo ra ánh sáng của mọi vật mà nó phản chiếu!', prompt:'Gương có tự tạo ra hình ảnh khi hoàn toàn thiếu ánh sáng không?', hint:'Trong phòng rất tối, em có nhìn rõ ảnh trong gương không?', test:'Quan sát vật phản chiếu trong gương khi thay đổi độ sáng của đèn phòng.', truth:'Ánh sáng từ vật truyền đến gương rồi phản xạ vào mắt; gương không tự tạo ánh sáng của vật.', keys:['phản xạ','ánh sáng','không tự','chiếu','mắt']},
-    {topicId:'sound', icon:'🎸', scene:'Dây đàn rung', claim:'Âm thanh phát ra từ dây đàn ngay cả khi dây hoàn toàn đứng yên.', prompt:'Em có thể quan sát gì trên dây đàn đang phát âm?', hint:'Hãy chạm rất nhẹ vào dây đang rung khi đàn đã ngừng gảy.', test:'Gảy dây đàn hoặc dây thun căng an toàn và quan sát dao động.', truth:'Âm được tạo ra bởi sự dao động của vật; dây đàn rung thì phát âm.', keys:['dao động','rung','chuyển động','phát âm']},
-    {topicId:'magnet', icon:'🧲', scene:'Nam châm và vật nhỏ', claim:'Nam châm hút mọi kim loại mạnh như nhau, kể cả nhôm và đồng!', prompt:'Em có thể kiểm chứng bằng đồ vật nào?', hint:'Thử so sánh kẹp giấy bằng thép và vật bằng nhôm.', test:'Dùng nam châm nhỏ thử với kẹp giấy thép và lá nhôm; tránh vật sắc.', truth:'Nam châm hút rõ vật liệu sắt từ như sắt và nhiều loại thép; không phải mọi kim loại đều bị hút mạnh.', keys:['không phải mọi','sắt','thép','đồng','nhôm','vật liệu']}
-  ],
-  8: [
-    {topicId:'pressure', icon:'💧', scene:'Chai nước có hai lỗ', claim:'Tớ nghĩ lỗ ở gần mặt nước chịu áp suất lớn hơn vì nó gần không khí hơn!', prompt:'Áp suất nước thay đổi theo độ sâu thế nào?', hint:'So sánh hai lỗ trên cùng một chai nước.', test:'Người lớn hỗ trợ chuẩn bị chai nhựa đã đục lỗ sẵn, rót nước và quan sát.', truth:'Trong chất lỏng đứng yên, áp suất tăng theo độ sâu; lỗ ở sâu hơn chịu áp suất lớn hơn.', keys:['độ sâu','sâu hơn','tăng','lỗ dưới','áp suất']},
-    {topicId:'lever', icon:'⚖️', scene:'Thước làm đòn bẩy', claim:'Đặt điểm tựa ở đâu thì lực cần thiết để nhấc một vật luôn giống hệt nhau!', prompt:'Vị trí điểm tựa có tác dụng gì?', hint:'Thử đổi khoảng cách từ điểm tựa tới vị trí đặt lực.', test:'Dùng thước nhựa, gôm làm điểm tựa và cục tẩy nhỏ làm tải.', truth:'Thay đổi vị trí điểm tựa làm thay đổi cánh tay đòn, nên lực cần thiết có thể thay đổi.', keys:['điểm tựa','cánh tay đòn','khoảng cách','khác nhau','thay đổi']},
-    {topicId:'heat', icon:'🥄', scene:'Thìa trong nước ấm', claim:'Cho thìa kim loại vào nước ấm thì nhiệt chỉ truyền từ thìa sang nước thôi!', prompt:'Nhiệt truyền theo chiều nào? Vì sao?', hint:'Nhiệt đi từ nơi có nhiệt độ cao hơn tới nơi có nhiệt độ thấp hơn.', test:'Dùng nước ấm vừa phải và thìa kim loại, quan sát cảm giác ấm lên ở cán thìa; không dùng nước nóng bỏng.', truth:'Nếu nước ấm hơn thìa, nhiệt truyền từ nước sang thìa, rồi dẫn dọc theo thìa.', keys:['từ nóng','sang lạnh','nhiệt độ','truyền nhiệt','nước sang thìa','dẫn nhiệt']}
-  ],
-  9: [
-    {topicId:'refraction', icon:'🥛', scene:'Bút chì trong cốc nước', claim:'Chiếc bút bị gãy thật khi chạm vào nước, tớ nhìn thấy rõ mà!', prompt:'Em có đồng ý không? Làm sao chứng minh bút không gãy?', hint:'Ánh sáng đổi hướng khi qua mặt phân cách nước và không khí.', test:'Rút bút khỏi cốc nhựa trong và quan sát xem bút có nguyên vẹn không.', truth:'Bút không bị gãy. Ánh sáng khúc xạ khi đi xiên từ nước ra không khí làm ảnh phần bút dưới nước bị lệch.', keys:['khúc xạ','ánh sáng','không gãy','lệch','nước','không khí']},
-    {topicId:'lens', icon:'🔍', scene:'Kính lúp xem chữ', claim:'Kính lúp nào cũng làm chữ nhỏ đi, dù đặt ở khoảng cách nào!', prompt:'Em có thể thử để chứng minh điều ngược lại không?', hint:'Hãy quan sát chữ khi kính lúp đặt gần trang sách.', test:'Đặt kính lúp gần chữ trong sách và thay đổi khoảng cách; không hướng kính lúp về Mặt Trời.', truth:'Khi chữ ở trong khoảng tiêu cự của kính lúp (thấu kính hội tụ), ta nhìn thấy ảnh ảo lớn hơn.', keys:['to hơn','phóng đại','thấu kính','lớn hơn','tiêu cự','kính lúp']},
-    {topicId:'circuit', icon:'🔋', scene:'Bóng đèn mini và pin', claim:'Một bóng đèn mini sẽ sáng dù mạch bị hở, vì pin vẫn có điện!', prompt:'Điều kiện gì để dòng điện qua đèn?', hint:'Dòng điện cần đường dẫn điện kín trong mạch.', test:'Dùng bộ pin 1,5–3V và bóng đèn mini có dây nối, không dùng điện lưới.', truth:'Trong mạch điện đơn giản, mạch phải kín thì dòng điện mới chạy qua đèn để đèn sáng.', keys:['mạch kín','mạch hở','dòng điện','không sáng','đóng mạch']}
-  ]
-};
+// Bốn trải nghiệm MẪU cố định, chỉ để chơi thử khi chưa gọi AI. Chế độ Camera AI không dùng danh sách này.
+export const DEMOS=[
+  {topicTitle:'Ánh sáng',icon:'🥛',scene:'Bút chì trong cốc nước',observation:'Bút chì nhìn như bị lệch ở mặt nước.',
+   claim:'Tớ nghĩ nước đã làm chiếc bút chì bị gãy thật ở vị trí mặt nước!',
+   prompt:'Cậu có đồng ý không? Hãy đưa một bằng chứng mà tớ có thể kiểm tra.',
+   hint:'Hãy thử lấy bút ra khỏi cốc và quan sát hình dạng của nó.',
+   experiment:'Rút bút ra khỏi cốc nước rồi đặt lại vào cốc. So sánh hình ảnh ở hai trường hợp.',
+   truth:'Bút không gãy. Ánh sáng bị khúc xạ khi truyền xiên qua mặt phân cách nước và không khí nên ảnh phần bút dưới nước trông lệch.',
+   keys:['khúc xạ','ánh sáng','không gãy','còn nguyên','bút nguyên','lệch','đổi hướng']},
+  {topicTitle:'Nam châm và vật liệu',icon:'🧲',scene:'Nam châm và kẹp giấy',observation:'Một nam châm đặt gần vài vật kim loại.',
+   claim:'Tớ nghĩ nam châm hút được mọi kim loại mạnh như nhau, kể cả nhôm và đồng!',
+   prompt:'Cậu có cách nào chứng minh nhận định của tớ chưa đúng không?',
+   hint:'Thử so sánh kẹp giấy thép với một miếng nhôm.',
+   experiment:'Dùng nam châm nhỏ đến gần kẹp giấy thép và lá nhôm, so sánh; tránh các vật sắc nhọn.',
+   truth:'Không phải kim loại nào cũng bị nam châm hút mạnh. Sắt và nhiều loại thép có thể bị hút rõ, còn nhôm và đồng không bị hút mạnh theo cách thông thường.',
+   keys:['sắt','thép','nhôm','đồng','không phải mọi','không phải tất cả','vật liệu']},
+  {topicTitle:'Sinh học thực vật',icon:'🌿',scene:'Một chậu cây xanh',observation:'Cây có lá màu xanh và được trồng trong chậu.',
+   claim:'Tớ chắc rằng cây xanh chỉ cần nước, không cần ánh sáng mà vẫn lớn lên khỏe mạnh mãi!',
+   prompt:'Cậu có thể giải thích tại sao tớ nói chưa đúng không?',
+   hint:'Ánh sáng có vai trò thế nào đối với việc cây xanh tự tạo chất dinh dưỡng?',
+   experiment:'Quan sát hai cây cùng loại ở hai nơi có điều kiện ánh sáng phù hợp và khác nhau trong vài ngày; không làm hư hại cây.',
+   truth:'Cây xanh cần ánh sáng để quang hợp, tạo chất hữu cơ; nước thôi không đủ để cây xanh sinh trưởng khỏe mạnh lâu dài.',
+   keys:['ánh sáng','quang hợp','chất dinh dưỡng','tạo chất','cần sáng','năng lượng']},
+  {topicTitle:'Lực và chuyển động',icon:'👟',scene:'Giày đặt trên mặt sàn',observation:'Đôi giày tiếp xúc với mặt sàn.',
+   claim:'Tớ nghĩ đế giày càng trơn thì càng giúp người đi không bị trượt, vì không có ma sát!',
+   prompt:'Cậu thấy điều này có hợp lý không? Hãy giải thích bằng lực ma sát.',
+   hint:'Đi trên nền trơn và nền nhám, trường hợp nào dễ trượt hơn?',
+   experiment:'Quan sát đế giày có rãnh hoặc bề mặt nhám; không cần đi thử trên bề mặt trơn nguy hiểm.',
+   truth:'Ma sát giữa giày và mặt sàn giúp chân bám sàn và hạn chế trượt trong nhiều tình huống; mất ma sát thường khiến dễ trượt hơn.',
+   keys:['ma sát','bám','trượt','đế giày','nhám','trơn']}
+];

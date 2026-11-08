@@ -1,8 +1,9 @@
 {
-  "name": "sciencelens-lab-v2",
-  "version": "2.0.0",
+  "name": "sciencelens-lab-v3",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
-  "description": "ScienceLens AI: robot khoa hoc tranh luan, Vercel stateless, no database",
+  "description": "ScienceLens AI: camera tu chon chu de, robot phan bien, Vercel stateless",
+  "scripts": {"test": "node tests/smoke.test.mjs"},
   "engines": {"node": ">=20"}
 }
